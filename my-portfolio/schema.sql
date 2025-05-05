@@ -20,6 +20,13 @@ CREATE TABLE portfolio (
     FOREIGN KEY (portfolio_type_id) REFERENCES portfolio_type(id)
 );
 
+CREATE TABLE gallery (
+    id integer PRIMARY KEY AUTO_INCREMENT,
+    img VARCHAR(255) NULL,
+    portfolio_id integer NOT NULL,
+    FOREIGN KEY (portfolio_id) REFERENCES portfolio(id) ON DELETE CASCADE
+)
+
 INSERT INTO portfolio_type (title,descriptions)
 VALUES
 ('skills',''),

@@ -1,6 +1,7 @@
 import react from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './feature/home';
+import Portfolio from './feature/portfolio';
 import LoginPage from './feature/login';
 import CreatePortfolio from './feature/createPortfolio';
 import DisplayPortfolio from './feature/displayPortfolio';
@@ -11,6 +12,7 @@ const MainRouter = () => {
         <Router>
             <Routes>
                 <Route path='/' element={<Home />} />
+                <Route path='/portfolio/:id' element={<Portfolio />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/createPortfolio' element={<CreatePortfolio />} />           
                 <Route path='/displayPortfolio' element={<DisplayPortfolio />} />           

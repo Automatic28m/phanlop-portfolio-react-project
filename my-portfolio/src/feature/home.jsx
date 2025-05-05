@@ -128,7 +128,7 @@ export default function Portfolio() {
           <h2 className="text-2xl font-semibold mb-8">Projects</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {project.length > 0 && project.map((item, index) => (
-              <div className="bg-white rounded-lg shadow p-4" key={index}>
+              <a href={`portfolio/${item.id}`} className="bg-white rounded-lg shadow p-4 transition hover:shadow-xl" key={index}>
                 <LightGallery
                   speed={500}
                   plugins={[lgThumbnail, lgZoom]}
@@ -143,7 +143,7 @@ export default function Portfolio() {
                 <h3 className="font-bold text-lg">{item.title}</h3>
                 <p className="text-sm">{item.contents}</p>
                 <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
-              </div>
+              </a>
             ))}
           </div>
         </section>

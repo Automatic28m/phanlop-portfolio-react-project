@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import cors from 'cors'
 import multer from 'multer';
 import path from 'path';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'; // Import the `fileURLToPath` function
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // Get the directory name
 
-import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities } from './database.js'
+import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities, uploadImageGalleryToPortfolioId, getGalleryByPortfolioId } from './database.js'
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -112,24 +112,45 @@ app.get("/getEducations", async (req, res) => {
     res.send(portfolioFormatted);
 })
 
-app.post("/createPortfolio", upload.single('thumbnail'), async (req, res) => {
+app.post('/createPortfolioAndGallery', upload.fields([
+    { name: 'thumbnail', maxCount: 1 },  // thumbnail
+    { name: 'gallery_images', maxCount: 10 } // gallery images (up to 10)
+]), async (req, res) => {
     try {
-        const { title, contents, event_location, event_date, portfolio_type_id } = req.body
-        let thumbnail = req.file ? req.file.path : null;
+        // Extract portfolio data from the request body
+        const { title, contents, event_location, event_date, portfolio_type_id } = req.body;
 
-        if (thumbnail) {
-            thumbnail = thumbnail.replace(/\\/g, '/'); // Normalize the path for consistency
-        }
+        // Handle thumbnail image
+        const thumbnail = req.files.thumbnail ? req.files.thumbnail[0].path : null;
 
-        const portfolio = await createPortfolio(title, contents, event_location, event_date, thumbnail, portfolio_type_id)
-        console.log(portfolio);
-        res.status(201).send(portfolio)
-    } catch (error) {
-        console.error("Error creating portfolio:", error);
-        res.status(500).send("Sever Error");
+        // Handle gallery images
+        const galleryImages = req.files.gallery_images ? req.files.gallery_images.map(file => file.path) : [];
 
+        // Create the portfolio in the database
+        const portfolio = await createPortfolio(title, contents, event_location, event_date, thumbnail, portfolio_type_id);
+        const portfolioId = portfolio[0].id;
+
+        // Upload gallery images associated with the portfolio
+        await uploadImageGalleryToPortfolioId(portfolioId, galleryImages);
+
+        res.status(200).json({ message: 'Portfolio and gallery images uploaded successfully', portfolioId });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error creating portfolio and uploading gallery images' });
     }
 });
+
+app.get("/getGalleryByPortfolioId/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const gallery = await getGalleryByPortfolioId(id);
+        res.send(gallery);
+    } catch (error) {
+        console.error("Error in /getGalleryByPortfolioId:", err);
+    }
+})
+
+app.listen(8080, () => console.log('Server is running on http://localhost:8080'));
 
 app.post("/updatePortfolioById/:id", upload.single('thumbnail'), async (req, res) => {
     try {
@@ -157,6 +178,19 @@ app.delete("/deletePortfolioById/:id", async (req, res) => {
         res.status(500).send({ message: "Delete failed" });
     }
 })
+
+// app.post('/upload-gallery/:portfolioId', upload.array('images', 10), async (req, res) => {
+//     const { portfolioId } = req.params;
+//     const imageFilenames = req.files.map(file => file.filename); // multer adds this
+
+//     try {
+//         const result = await uploadImageGalleryToPortfolioId(portfolioId, imageFilenames);
+//         res.json({ success: true, inserted: result.affectedRows });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ success: false, error: err.message });
+//     }
+// });
 
 app.post("/login", async (req, res) => {
     try {

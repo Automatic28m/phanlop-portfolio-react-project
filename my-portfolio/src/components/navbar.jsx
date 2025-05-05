@@ -1,10 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const handleNav = (sectionId) => {
+        if (location.pathname !== "/") {
+            navigate("/", { replace: false });
+            // Wait for the homepage to load, then scroll
+            setTimeout(() => scrollToSection(sectionId), 100);
+        } else {
+            scrollToSection(sectionId);
+        }
+
+        setIsMobileMenuOpen(false); // close mobile menu on click
+    };
+
+    const scrollToSection = (id) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
     };
 
     return (
@@ -15,18 +37,18 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-6 text-sm font-medium">
-                        <a href="#hero" className="hover:text-blue-600">Home</a>
-                        <a href="#about" className="hover:text-blue-600">About</a>
-                        <a href="#skills" className="hover:text-blue-600">Skills</a>
-                        <a href="#projects" className="hover:text-blue-600">Projects</a>
-                        <a href="#achievements" className="hover:text-blue-600">Achievements</a>
-                        <a href="#internships" className="hover:text-blue-600">Internships</a>
-                        <a href="#activities" className="hover:text-blue-600">Activities</a>
-                        <a href="#education" className="hover:text-blue-600">Education</a>
-                        <a href="#contact" className="hover:text-blue-600">Contact</a>
+                        {["home", "about", "skills", "projects", "achievements", "internships", "activities", "education", "contact"].map((id) => (
+                            <button
+                                key={id}
+                                onClick={() => handleNav(id)}
+                                className="hover:text-blue-600"
+                            >
+                                {id.charAt(0).toUpperCase() + id.slice(1)}
+                            </button>
+                        ))}
                     </div>
 
-                    {/* Mobile Hamburger Button */}
+                    {/* Mobile Menu Button */}
                     <div className="md:hidden">
                         <button onClick={toggleMobileMenu} className="text-gray-500 hover:text-blue-600">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -39,15 +61,15 @@ export default function Navbar() {
                 {/* Mobile Menu */}
                 <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"} mt-4`}>
                     <div className="space-y-4 text-sm font-medium">
-                        <a href="#hero" className="block text-blue-600 hover:text-blue-800">Home</a>
-                        <a href="#about" className="block text-blue-600 hover:text-blue-800">About</a>
-                        <a href="#skills" className="block text-blue-600 hover:text-blue-800">Skills</a>
-                        <a href="#projects" className="block text-blue-600 hover:text-blue-800">Projects</a>
-                        <a href="#achievements" className="block text-blue-600 hover:text-blue-800">Achievements</a>
-                        <a href="#internships" className="block text-blue-600 hover:text-blue-800">Internships</a>
-                        <a href="#activities" className="block text-blue-600 hover:text-blue-800">Activities</a>
-                        <a href="#education" className="block text-blue-600 hover:text-blue-800">Education</a>
-                        <a href="#contact" className="block text-blue-600 hover:text-blue-800">Contact</a>
+                        {["home", "about", "skills", "projects", "achievements", "internships", "activities", "education", "contact"].map((id) => (
+                            <button
+                                key={id}
+                                onClick={() => handleNav(id)}
+                                className="block text-blue-600 hover:text-blue-800"
+                            >
+                                {id.charAt(0).toUpperCase() + id.slice(1)}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </nav>

@@ -16,8 +16,8 @@ export async function getPortfolio() {
 }
 
 export async function getPortfolioById(id) {
-    const [rows] = await pool.query("SELECT * FROM portfolio WHERE id = ?", [id])
-    return rows
+    const [rows] = await pool.query("SELECT * FROM portfolio WHERE id = ?", [id]);
+    return rows;
 }
 
 export async function getPortfolioByTypeId(id) {
@@ -30,32 +30,34 @@ export async function getSkills() {
     return rows
 }
 export async function getProjects() {
-    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ?", [2])
+    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ? ORDER BY event_date DESC", [2])
     return rows
 }
 export async function getAcheivements() {
-    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ?", [3])
+    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ? ORDER BY event_date DESC", [3])
     return rows
 }
 export async function getInternships() {
-    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ?", [4])
+    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ? ORDER BY event_date DESC", [4])
     return rows
 }
 export async function getActivities() {
-    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ?", [5])
+    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ? ORDER BY event_date DESC", [5])
     return rows
 }
 export async function getEducations() {
-    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ?", [6])
+    const [rows] = await pool.query("SELECT * FROM portfolio WHERE portfolio_type_id = ? ORDER BY event_date DESC", [6])
     return rows
 }
 
 export async function createPortfolio(title, contents, event_location, event_date, thumbnail, portfolio_type_id) {
-    const [result] = await pool.query("INSERT INTO portfolio (title, contents, event_location, event_date, thumbnail, portfolio_type_id) VALUES (?,?,?,?,?,?)",
-        [title, contents, event_location, event_date, thumbnail, portfolio_type_id]
-    )
-    const id = result.insertId
-    return getPortfolioById(id)
+    const [result] = await pool.query(`
+        INSERT INTO portfolio (title, contents, event_location, event_date, thumbnail, portfolio_type_id) 
+        VALUES (?, ?, ?, ?, ?, ?)
+    `, [title, contents, event_location, event_date, thumbnail, portfolio_type_id]);
+
+    const id = result.insertId;
+    return getPortfolioById(id);
 }
 
 export async function getPortfolioType() {
@@ -89,6 +91,30 @@ export async function deletePortfolioById(id) {
     )
     return rows;
 }
+
+export async function uploadImageGalleryToPortfolioId(id, imageFilenames) {
+    if (!imageFilenames || imageFilenames.length === 0) {
+        throw new Error("No images provided.");
+    }
+
+    const values = imageFilenames.map(filename => [filename, id]);
+
+    const [result] = await pool.query(`
+        INSERT INTO gallery (img, portfolio_id) VALUES ?
+    `, [values]);
+
+    return result;
+}
+
+export async function getGalleryByPortfolioId(id) {
+    const [rows] = await pool.query(`
+            SELECT * 
+            FROM gallery
+            WHERE portfolio_id = ?
+        `, [id])
+    return rows
+}
+
 
 // ABOUT USER
 

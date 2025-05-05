@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import BackendNavbar from "../components/backendNavbar.jsx";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import UploadGallery from "../components/uploadGalleryComponent.jsx";
 
 export default function CreatePortfolio() {
-
     const navigate = useNavigate();
 
     const [title, setTitle] = useState('');
@@ -15,60 +15,64 @@ export default function CreatePortfolio() {
     const [event_date, setEventDate] = useState(null);
     const [portfolio_type_id, setPortfolioTypeId] = useState('');
     const [portfolioType, setPortfolioType] = useState([]);
+    const [files, setFiles] = useState([]);
+    const [showGalleryUpload, setShowGalleryUpload] = useState(true);
 
     useEffect(() => {
         axios.get("http://localhost:8080/getPortfolioType")
-            .then(res => {
-                console.log("Fetched portfolio type data:", res.data);
+            .then((res) => {
                 setPortfolioType(res.data);
             })
-            .catch(err => console.error("Error fetching education data:", err));
+            .catch((err) => console.error("Error fetching portfolio types:", err));
     }, []);
 
+    const handleFileChange = (e) => {
+        setFiles(e.target.files);
+    };
+
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
         const formattedDate = event_date ? event_date.toISOString() : null;
-
         const formData = new FormData();
+
         formData.append("title", title);
         formData.append("contents", contents);
         formData.append("event_location", event_location);
         formData.append("event_date", formattedDate);
         formData.append("portfolio_type_id", portfolio_type_id);
 
-        // Append the image file if selected
-        const imageUpload = document.getElementById('imageUpload');
+        // Append thumbnail if selected
+        const imageUpload = document.getElementById("imageUpload");
         if (imageUpload.files[0]) {
             formData.append("thumbnail", imageUpload.files[0]);
         }
 
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
+        // Append gallery images
+        for (let file of files) {
+            formData.append("gallery_images", file);
         }
 
         try {
-            // Send the form data (including the image) to the backend
-            await axios.post("http://localhost:8080/createPortfolio", formData, {
+            const res = await axios.post("http://localhost:8080/createPortfolioAndGallery", formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data", // Important for file uploads
-                }
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
+            console.log("Portfolio created successfully:", res.data);
             navigate('/displayPortfolio');
         } catch (err) {
             console.error("Error creating portfolio:", err);
         }
     };
 
-
-
     return (
         <div>
-            <BackendNavbar></BackendNavbar>
+            <BackendNavbar />
             <div className="flex items-center justify-center h-screen bg-gray-100">
                 <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" enctype="multipart/form-data">
-                    <h2 className="text-2xl font-bold mb-6 text-center">Create portfolio</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-center">Create Portfolio</h2>
 
                     <div className="mb-4">
                         <label className="block mb-1 font-semibold">Title</label>
@@ -87,7 +91,6 @@ export default function CreatePortfolio() {
                             value={contents}
                             onChange={(e) => setContents(e.target.value)}
                             className="w-full p-2 border rounded"
-                            // required
                         />
                     </div>
 
@@ -98,7 +101,6 @@ export default function CreatePortfolio() {
                             value={event_location}
                             onChange={(e) => setEventLocation(e.target.value)}
                             className="w-full p-2 border rounded"
-                        // required
                         />
                     </div>
 
@@ -115,7 +117,18 @@ export default function CreatePortfolio() {
 
                     <div className="mb-6">
                         <label className="block mb-1 font-semibold" for="imageUpload">Upload an image thumbnail:</label>
-                        <input className="w-full p-2 border rounded" type="file" id="imageUpload" name="imageUpload" accept="image/*"></input>
+                        <input className="w-full p-2 border rounded" type="file" id="imageUpload" name="imageUpload" accept="image/*" />
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="block mb-1 font-semibold" for="galleryImages">Upload images to gallery:</label>
+                        <input
+                            className="w-full p-2 border rounded"
+                            type="file"
+                            name="gallery_images"
+                            multiple
+                            onChange={handleFileChange}
+                        />
                     </div>
 
                     <div className="mb-6">
@@ -134,10 +147,10 @@ export default function CreatePortfolio() {
                     </div>
 
                     <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-                        Save
+                        Save Portfolio
                     </button>
                 </form>
             </div>
         </div>
     );
-};
+}
