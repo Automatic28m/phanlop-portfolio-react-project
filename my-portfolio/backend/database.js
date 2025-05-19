@@ -23,6 +23,13 @@ const pool = mysql.createPool({
     connectionLimit: 10,
 }).promise()
 
+console.log('Connecting to DB:', {
+  host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
+});
+
 console.log('✅ MySQL pool created');
 
 export async function getPortfolio() {
