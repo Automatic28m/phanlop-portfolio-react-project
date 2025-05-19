@@ -3,8 +3,13 @@ import mysql from 'mysql2'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import fs from 'fs';
+import { fileURLToPath } from 'url';
 import path from 'path';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST,
