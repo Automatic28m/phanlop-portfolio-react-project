@@ -3,9 +3,9 @@ import mysql from 'mysql2'
 import dotenv from 'dotenv'
 dotenv.config()
 
-import { fileURLToPath } from 'url';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +16,7 @@ const pool = mysql.createPool({
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
+    port: 18133,
     ssl: {
         ca: fs.readFileSync(path.join(__dirname, 'certs', 'ca.pem')),
     },
