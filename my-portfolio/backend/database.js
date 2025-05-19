@@ -10,6 +10,8 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise()
 
+console.log('✅ MySQL pool created');
+
 export async function getPortfolio() {
     const [rows] = await pool.query("SELECT p.*, pt.title AS type_title FROM portfolio p LEFT JOIN portfolio_type pt ON p.portfolio_type_id = pt.id")
     return rows
