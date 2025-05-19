@@ -150,7 +150,11 @@ app.get("/getGalleryByPortfolioId/:id", async (req, res) => {
     }
 })
 
-app.listen(8080, () => console.log('Server is running on http://localhost:8080'));
+// app.listen(8080, () => console.log('Server is running on http://localhost:8080'));
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 app.post("/updatePortfolioById/:id", upload.single('thumbnail'), async (req, res) => {
     try {
