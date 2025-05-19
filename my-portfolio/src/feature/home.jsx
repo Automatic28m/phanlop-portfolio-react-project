@@ -19,7 +19,7 @@ export default function Portfolio() {
   const [education, setEducation] = useState([]);
 
   const fetchSkills = () => {
-    axios.get("http://localhost:8080/getSkills")  // adjust endpoint as needed
+    axios.get("https://phanlop-portfolio-react-project.onrender.com/getSkills")  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched skills data:", res.data); // 👈 logs to browser console
         setSkill(res.data);
@@ -28,7 +28,7 @@ export default function Portfolio() {
   };
 
   const fetchProjects = () => {
-    axios.get("http://localhost:8080/getProjects")  // adjust endpoint as needed
+    axios.get("https://phanlop-portfolio-react-project.onrender.com/getProjects")  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched projects data:", res.data); // 👈 logs to browser console
         setProject(res.data);
@@ -37,7 +37,7 @@ export default function Portfolio() {
   };
 
   const fetchAchievements = () => {
-    axios.get("http://localhost:8080/getAcheivements")  // adjust endpoint as needed
+    axios.get("https://phanlop-portfolio-react-project.onrender.com/getAcheivements")  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched Acheivements data:", res.data); // 👈 logs to browser console
         setAcheivement(res.data);
@@ -46,7 +46,7 @@ export default function Portfolio() {
   };
 
   const fetchInternships = () => {
-    axios.get("http://localhost:8080/getInternships")  // adjust endpoint as needed
+    axios.get("https://phanlop-portfolio-react-project.onrender.com/getInternships")  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched internships data:", res.data); // 👈 logs to browser console
         setInternship(res.data);
@@ -55,7 +55,7 @@ export default function Portfolio() {
   };
 
   const fetchActivities = () => {
-    axios.get("http://localhost:8080/getActivities")  // adjust endpoint as needed
+    axios.get("https://phanlop-portfolio-react-project.onrender.com/getActivities")  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched activities data:", res.data); // 👈 logs to browser console
         setActivity(res.data);
@@ -64,7 +64,7 @@ export default function Portfolio() {
   };
 
   const fetchEducations = () => {
-    axios.get("http://localhost:8080/getEducations")  // adjust endpoint as needed
+    axios.get("https://phanlop-portfolio-react-project.onrender.com/getEducations")  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched education data:", res.data); // 👈 logs to browser console
         setEducation(res.data);
@@ -135,9 +135,9 @@ export default function Portfolio() {
                 >
                   <a
                     className="gallery-item"
-                    data-src={`http://localhost:8080/${item.thumbnail}`}
+                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
                   >
-                    <img src={`http://localhost:8080/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                   </a>
                 </LightGallery>
                 <h3 className="font-bold text-lg">{item.title}</h3>
@@ -160,9 +160,9 @@ export default function Portfolio() {
                 >
                   <a
                     className="gallery-item"
-                    data-src={`http://localhost:8080/${item.thumbnail}`}
+                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
                   >
-                    <img src={`http://localhost:8080/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                   </a>
                 </LightGallery>
                 <h3 className="font-bold text-lg">{item.title}</h3>
@@ -185,9 +185,9 @@ export default function Portfolio() {
                 >
                   <a
                     className="gallery-item"
-                    data-src={`http://localhost:8080/${item.thumbnail}`}
+                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
                   >
-                    <img src={`http://localhost:8080/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                   </a>
                 </LightGallery>
                 <h3 className="font-bold">{item.title}</h3>
@@ -210,9 +210,9 @@ export default function Portfolio() {
                 >
                   <a
                     className="gallery-item"
-                    data-src={`http://localhost:8080/${item.thumbnail}`}
+                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
                   >
-                    <img src={`http://localhost:8080/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                   </a>
                 </LightGallery>
                 <h3 className="font-bold">{item.title}</h3>

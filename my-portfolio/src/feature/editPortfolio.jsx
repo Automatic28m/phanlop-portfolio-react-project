@@ -22,7 +22,7 @@ export default function EditPortfolio() {
 
 
     useEffect(() => {
-        axios.get("http://localhost:8080/getPortfolioType")
+        axios.get("https://phanlop-portfolio-react-project.onrender.com/getPortfolioType")
             .then(res => {
                 console.log("Fetched portfolio type data:", res.data);
                 setPortfolioType(res.data);
@@ -32,7 +32,7 @@ export default function EditPortfolio() {
 
     // Fetch portfolio data
     useEffect(() => {
-        axios.get(`http://localhost:8080/getPortfolioById/${id}`)
+        axios.get(`https://phanlop-portfolio-react-project.onrender.com/getPortfolioById/${id}`)
             .then(res => {
                 console.log("Fetched portfolio:", res.data);
                 const data = res.data[0];
@@ -66,7 +66,7 @@ export default function EditPortfolio() {
         }
 
         try {
-            await axios.post(`http://localhost:8080/updatePortfolioById/${id}`, formData, {
+            await axios.post(`https://phanlop-portfolio-react-project.onrender.com/updatePortfolioById/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -141,7 +141,7 @@ export default function EditPortfolio() {
                         {currentThumbnail && (
                             <div className="mt-4">
                                 <img
-                                    src={`http://localhost:8080/${currentThumbnail}`}
+                                    src={`https://phanlop-portfolio-react-project.onrender.com/${currentThumbnail}`}
                                     alt="Current Thumbnail"
                                     className="w-full max-w-xs rounded"
                                 />

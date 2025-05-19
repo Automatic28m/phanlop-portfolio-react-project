@@ -19,7 +19,7 @@ export default function CreatePortfolio() {
     const [showGalleryUpload, setShowGalleryUpload] = useState(true);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/getPortfolioType")
+        axios.get("https://phanlop-portfolio-react-project.onrender.com/getPortfolioType")
             .then((res) => {
                 setPortfolioType(res.data);
             })
@@ -54,7 +54,7 @@ export default function CreatePortfolio() {
         }
 
         try {
-            const res = await axios.post("http://localhost:8080/createPortfolioAndGallery", formData, {
+            const res = await axios.post("https://phanlop-portfolio-react-project.onrender.com/createPortfolioAndGallery", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

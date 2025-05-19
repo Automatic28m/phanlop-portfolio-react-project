@@ -17,13 +17,13 @@ export default function Portfolio() {
     const [gallery, setGallery] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/getPortfolioById/${id}`)
+        axios.get(`https://phanlop-portfolio-react-project.onrender.com/getPortfolioById/${id}`)
             .then(res =>
                 setData(res.data[0]),
             )
             .catch(error => console.error('Error fetching detail: ', error));
 
-        axios.get(`http://localhost:8080/getGalleryByPortfolioId/${id}`)
+        axios.get(`https://phanlop-portfolio-react-project.onrender.com/getGalleryByPortfolioId/${id}`)
             .then(res =>
                 setGallery(res.data),
             )
@@ -42,7 +42,7 @@ export default function Portfolio() {
         <div>
             <Navbar></Navbar>
             <div className="pt-24 max-w-3xl mx-auto p-6">
-                <img src={`http://localhost:8080/${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
+                <img src={`https://phanlop-portfolio-react-project.onrender.com/${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
                 <h1 className="text-3xl font-bold mb-2">{data.title}</h1>
                 <p className="text-gray-700 whitespace-pre-line">{data.contents}</p>
                 <p className='text-sm font-bold'>At {data.event_location}, {data.event_date}</p>
@@ -57,9 +57,9 @@ export default function Portfolio() {
                             >
                                 <a
                                     className="gallery-item"
-                                    data-src={`http://localhost:8080/${item.img}`}
+                                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.img}`}
                                 >
-                                    <img src={`http://localhost:8080/${item.img}`} className="w-full h-48 object-cover rounded mb-2 shadow" />
+                                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.img}`} className="w-full h-48 object-cover rounded mb-2 shadow" />
                                 </a>
                             </LightGallery>
                         ))}

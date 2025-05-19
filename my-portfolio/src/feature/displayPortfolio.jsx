@@ -19,7 +19,7 @@ export default function DisplayPortfolio() {
 	const [toggleCleared, setToggleCleared] = useState(false);
 
 	const fetchData = () => {
-		axios.get("http://localhost:8080/Portfolio")  // adjust endpoint as needed
+		axios.get("https://phanlop-portfolio-react-project.onrender.com/Portfolio")  // adjust endpoint as needed
 			.then(res => {
 				console.log("Fetched education data:", res.data); // 👈 logs to browser console
 				setData(res.data);
@@ -63,7 +63,7 @@ export default function DisplayPortfolio() {
 	// }
 
 	const confirmDelete = (id) => (
-		axios.delete(`http://localhost:8080/deletePortfolioById/${id}`)
+		axios.delete(`https://phanlop-portfolio-react-project.onrender.com/deletePortfolioById/${id}`)
 			.then(res => {
 				toast.success(`ID ${id} has been deleted`);
 				fetchData();
@@ -179,7 +179,7 @@ export default function DisplayPortfolio() {
 					<div>
 						{row.thumbnail ? (
 							<img
-								src={`http://localhost:8080/${imagePath}`}  // Ensure full URL for access
+								src={`https://phanlop-portfolio-react-project.onrender.com/${imagePath}`}  // Ensure full URL for access
 								alt="Portfolio Thumbnail"
 								style={{ width: '100px', height: 'auto' }} // You can adjust the size here
 							/>
