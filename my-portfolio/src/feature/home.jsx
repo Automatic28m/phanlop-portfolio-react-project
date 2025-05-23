@@ -8,6 +8,9 @@ import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
+import LoadingCard from "../components/loadingCardComponent.jsx";
+import LoadingSkill from "../components/loadingSkillComponent.jsx";
+import LoadingSkillComponent from '../components/loadingSkillComponent.jsx';
 
 export default function Portfolio() {
 
@@ -18,13 +21,22 @@ export default function Portfolio() {
   const [activity, setActivity] = useState([]);
   const [education, setEducation] = useState([]);
 
+  const [loadingSkills, setLoadingSkills] = useState(true);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+  const [loadingAchievements, setLoadingAchievements] = useState(true);
+  const [loadingInternships, setLoadingInternships] = useState(true);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+  const [loadingEducation, setLoadingEducation] = useState(true);
+
+
   const fetchSkills = () => {
     axios.get("https://phanlop-portfolio-react-project.onrender.com/getSkills")  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched skills data:", res.data); // 👈 logs to browser console
         setSkill(res.data);
       })
-      .catch(err => console.error("Error fetching skills data:", err));
+      .catch(err => console.error("Error fetching skills data:", err))
+      .finally(() => setLoadingSkills(false));
   };
 
   const fetchProjects = () => {
@@ -33,7 +45,8 @@ export default function Portfolio() {
         console.log("Fetched projects data:", res.data); // 👈 logs to browser console
         setProject(res.data);
       })
-      .catch(err => console.error("Error fetching projects data:", err));
+      .catch(err => console.error("Error fetching projects data:", err))
+      .finally(() => setLoadingProjects(false));
   };
 
   const fetchAchievements = () => {
@@ -42,7 +55,8 @@ export default function Portfolio() {
         console.log("Fetched Acheivements data:", res.data); // 👈 logs to browser console
         setAcheivement(res.data);
       })
-      .catch(err => console.error("Error fetching Acheivements data:", err));
+      .catch(err => console.error("Error fetching Acheivements data:", err))
+      .finally(() => setLoadingAchievements(false));
   };
 
   const fetchInternships = () => {
@@ -51,7 +65,8 @@ export default function Portfolio() {
         console.log("Fetched internships data:", res.data); // 👈 logs to browser console
         setInternship(res.data);
       })
-      .catch(err => console.error("Error fetching internships data:", err));
+      .catch(err => console.error("Error fetching internships data:", err))
+      .finally(() => setLoadingInternships(false));
   };
 
   const fetchActivities = () => {
@@ -60,7 +75,8 @@ export default function Portfolio() {
         console.log("Fetched activities data:", res.data); // 👈 logs to browser console
         setActivity(res.data);
       })
-      .catch(err => console.error("Error fetching activities data:", err));
+      .catch(err => console.error("Error fetching activities data:", err))
+      .finally(() => setLoadingActivities(false));
   };
 
   const fetchEducations = () => {
@@ -69,7 +85,8 @@ export default function Portfolio() {
         console.log("Fetched education data:", res.data); // 👈 logs to browser console
         setEducation(res.data);
       })
-      .catch(err => console.error("Error fetching education data:", err));
+      .catch(err => console.error("Error fetching education data:", err))
+      .finally(() => setLoadingEducation(false));
   };
 
   useEffect(() => {
@@ -113,131 +130,167 @@ export default function Portfolio() {
           </p>
         </section>
 
+
         {/* Skills */}
         <section id='skills' className="px-6 py-16 bg-gray-100">
-          <h2 className="text-2xl font-semibold text-center mb-8">Skills & Experiences</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-xl mx-auto">
-            {skill.length > 0 && skill.map((item, index) => (
-              <span key={index} className="bg-white p-4 rounded shadow">{item.title}</span>
-            ))}
-          </div>
+          {loadingSkills ? (
+            <LoadingSkillComponent></LoadingSkillComponent>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold text-center mb-8">Skills & Experiences</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-xl mx-auto">
+                {skill.length > 0 && skill.map((item, index) => (
+                  <span key={index} className="bg-white p-4 rounded shadow">{item.title}</span>
+                ))}
+              </div>
+            </>
+          )}
         </section>
 
         {/* Projects */}
         <section id='projects' className="px-6 py-16 max-w-5xl mx-auto">
-          <h2 className="text-2xl font-semibold mb-8">Projects</h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {project.length > 0 && project.map((item, index) => (
-              <a href={`portfolio/${item.id}`} className="bg-white rounded-lg shadow p-4 transition hover:shadow-xl" key={index}>
-                <LightGallery
-                  speed={500}
-                  plugins={[lgThumbnail, lgZoom]}
-                >
-                  <a
-                    className="gallery-item"
-                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
-                  >
-                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+          {loadingProjects ? (
+            <LoadingCard></LoadingCard>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold text-center mb-8">Projects</h2>
+              <div className="grid gap-6 md:grid-cols-2">
+                {project.length > 0 && project.map((item, index) => (
+                  <a href={`portfolio/${item.id}`} className="bg-white rounded-lg shadow p-4 transition hover:shadow-xl" key={index}>
+                    <LightGallery
+                      speed={500}
+                      plugins={[lgThumbnail, lgZoom]}
+                    >
+                      <a
+                        className="gallery-item"
+                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                      >
+                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                      </a>
+                    </LightGallery>
+                    <h3 className="font-bold text-lg">{item.title}</h3>
+                    <p className="text-sm">{item.contents}</p>
+                    <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
                   </a>
-                </LightGallery>
-                <h3 className="font-bold text-lg">{item.title}</h3>
-                <p className="text-sm">{item.contents}</p>
-                <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
-              </a>
-            ))}
-          </div>
+                ))}
+              </div>
+            </>
+          )}
         </section>
 
         {/* Achievements */}
         <section id='achievements' className="px-6 py-16 bg-gray-100">
-          <h2 className="text-2xl font-semibold text-center mb-8">Achievements</h2>
-          <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
-            {acheivement.length > 0 && acheivement.map((item, index) => (
-              <div className="bg-white rounded-lg shadow p-4" key={index}>
-                <LightGallery
-                  speed={500}
-                  plugins={[lgThumbnail, lgZoom]}
-                >
-                  <a
-                    className="gallery-item"
-                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
-                  >
-                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
-                  </a>
-                </LightGallery>
-                <h3 className="font-bold text-lg">{item.title}</h3>
-                <p className="text-sm">{item.contents}</p>
-                <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
+          {loadingAchievements ? (
+            <LoadingCard></LoadingCard>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold text-center mb-8">Achievements</h2>
+              <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
+                {acheivement.length > 0 && acheivement.map((item, index) => (
+                  <div className="bg-white rounded-lg shadow p-4" key={index}>
+                    <LightGallery
+                      speed={500}
+                      plugins={[lgThumbnail, lgZoom]}
+                    >
+                      <a
+                        className="gallery-item"
+                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                      >
+                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                      </a>
+                    </LightGallery>
+                    <h3 className="font-bold text-lg">{item.title}</h3>
+                    <p className="text-sm">{item.contents}</p>
+                    <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </section>
 
         {/* Internship Experiences */}
         <section id='internships' className="px-6 py-16">
-          <h2 className="text-2xl font-semibold text-center mb-8">Internship Experiences</h2>
-          <ul className="max-w-3xl mx-auto space-y-6">
-            {internship.length > 0 && internship.map((item, index) => (
-              <li className="bg-white p-4 rounded shadow" key={index}>
-                <LightGallery
-                  speed={500}
-                  plugins={[lgThumbnail, lgZoom]}
-                >
-                  <a
-                    className="gallery-item"
-                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
-                  >
-                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
-                  </a>
-                </LightGallery>
-                <h3 className="font-bold">{item.title}</h3>
-                <p className="mt-1 text-sm">{item.contents}</p>
-                <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
-              </li>
-            ))}
-          </ul>
+          {loadingInternships ? (
+            <LoadingCard></LoadingCard>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold text-center mb-8">Internship Experiences</h2>
+              <ul className="max-w-3xl mx-auto space-y-6">
+                {internship.length > 0 && internship.map((item, index) => (
+                  <li className="bg-white p-4 rounded shadow" key={index}>
+                    <LightGallery
+                      speed={500}
+                      plugins={[lgThumbnail, lgZoom]}
+                    >
+                      <a
+                        className="gallery-item"
+                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                      >
+                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                      </a>
+                    </LightGallery>
+                    <h3 className="font-bold">{item.title}</h3>
+                    <p className="mt-1 text-sm">{item.contents}</p>
+                    <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </section>
 
         {/* Academic Activities */}
         <section id='activities' className="px-6 py-16 bg-gray-100">
-          <h2 className="text-2xl font-semibold text-center mb-8">Academic Activities</h2>
-          <ul className="max-w-3xl mx-auto space-y-6">
-            {activity.length > 0 && activity.map((item, index) => (
-              <li className="bg-white p-4 rounded shadow" key={index}>
-                <LightGallery
-                  speed={500}
-                  plugins={[lgThumbnail, lgZoom]}
-                >
-                  <a
-                    className="gallery-item"
-                    data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
-                  >
-                    <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
-                  </a>
-                </LightGallery>
-                <h3 className="font-bold">{item.title}</h3>
-                <p className="text-sm">{item.contents}</p>
-                <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
-              </li>
-            ))}
-          </ul>
+          {loadingActivities ? (
+            <LoadingCard></LoadingCard>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold text-center mb-8">Academic Activities</h2>
+              <ul className="max-w-3xl mx-auto space-y-6">
+                {activity.length > 0 && activity.map((item, index) => (
+                  <li className="bg-white p-4 rounded shadow" key={index}>
+                    <LightGallery
+                      speed={500}
+                      plugins={[lgThumbnail, lgZoom]}
+                    >
+                      <a
+                        className="gallery-item"
+                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                      >
+                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                      </a>
+                    </LightGallery>
+                    <h3 className="font-bold">{item.title}</h3>
+                    <p className="text-sm">{item.contents}</p>
+                    <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </section>
 
         {/* Education */}
         <section id='education' className="px-6 py-16 bg-gray-100">
-          <h2 className="text-2xl font-semibold text-center mb-8">Education</h2>
-          <ul className="max-w-2xl mx-auto space-y-4">
-            {education.length > 0 && education.map((item, index) => (
-              <li key={index}>
-                <div className="bg-white p-4 rounded shadow">
-                  <h3 className="font-bold">{item.title}</h3>
-                  <h3 className="font-bold">{item.contents}</h3>
-                  <p className="text-sm text-gray-600">{new Date(item.event_date).getFullYear()}</p>
-                </div>
-              </li>
-            ))}
-
-          </ul>
+          {loadingEducation ? (
+            <LoadingCard></LoadingCard>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold text-center mb-8">Education</h2>
+              <ul className="max-w-2xl mx-auto space-y-4">
+                {education.length > 0 && education.map((item, index) => (
+                  <li key={index}>
+                    <div className="bg-white p-4 rounded shadow">
+                      <h3 className="font-bold">{item.title}</h3>
+                      <h3 className="font-bold">{item.contents}</h3>
+                      <p className="text-sm text-gray-600">{new Date(item.event_date).getFullYear()}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </section>
 
         {/* Contact */}
@@ -252,6 +305,6 @@ export default function Portfolio() {
           </a>
         </section>
       </main>
-    </div>
+    </div >
   );
 }
