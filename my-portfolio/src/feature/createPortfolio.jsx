@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import BackendNavbar from "../components/backendNavbar.jsx";
 import { useNavigate } from "react-router-dom";
 import UploadGallery from "../components/uploadGalleryComponent.jsx";
+import api from '../api/api.jsx';
 
 export default function CreatePortfolio() {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function CreatePortfolio() {
     const [showGalleryUpload, setShowGalleryUpload] = useState(true);
 
     useEffect(() => {
-        axios.get("https://phanlop-portfolio-react-project.onrender.com/getPortfolioType")
+        axios.get(api.getPortfolioType)
             .then((res) => {
                 setPortfolioType(res.data);
             })
@@ -54,7 +55,7 @@ export default function CreatePortfolio() {
         }
 
         try {
-            const res = await axios.post("https://phanlop-portfolio-react-project.onrender.com/createPortfolioAndGallery", formData, {
+            const res = await axios.post(api.createPortfolioAndGallery, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

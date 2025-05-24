@@ -47,7 +47,7 @@ VALUES
 CREATE TABLE admin (
     id integer AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(30) NOT NULL,
-    password VARCHAR(16) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

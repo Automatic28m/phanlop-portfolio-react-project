@@ -10,25 +10,25 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    port: 18133,
-    ssl: {
-        ca: fs.readFileSync(path.join(__dirname, 'certs', 'ca.pem')),
-    },
-    waitForConnections: true,
-    connectionLimit: 10,
+    port: process.env.MYSQL_PORT,
+    // ssl: {
+    //     ca: fs.readFileSync(path.join(__dirname, 'certs', 'ca.pem')),
+    // },
+    // waitForConnections: true,
+    // connectionLimit: 10,
 }).promise()
 
 console.log('Connecting to DB:', {
   host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
+    database: process.env.MYSQL_DATABASE,
+    port: process.env.PORT
 });
 
 console.log('✅ MySQL pool created');
@@ -141,7 +141,43 @@ export async function getGalleryByPortfolioId(id) {
 
 // ABOUT USER
 
-export async function adminLogin(username, password) {
-    const [result] = await pool.query("SELECT * FROM admin WHERE username = ? AND password = ?", [username, password])
+export async function adminLogin(username) {
+    const [result] = await pool.query("SELECT * FROM admin WHERE username = ?", [username])
     return result
+}
+
+export async function adminRegister(username, encryptedPassword) {
+    try {
+        const [result] = await pool.query(`
+            INSERT INTO admin (username, password)
+            VALUE (?,?)
+            `, [username, encryptedPassword]);
+        const id = result.insertId;
+        console.log("New admin created with id:", id);
+        return {
+            status: 201,
+            message: "New admin has been created",
+            userId: id
+        };
+    } catch (error) {
+        console.error("Registration failed: ", error.message);
+        return {
+            status: 500,
+            message: "Registration failed",
+            error: error.message
+        }
+    }
+}
+
+export async function getAdminFromUsername(username) {
+    try {
+        const [result] = await pool.query(`
+            SELECT * FROM admin
+            WHERE username = ?
+            `, [username]);
+        return result;
+    } catch (error) {
+        console.error("getAdminFromUsername query error: ", error.message);
+        return [];
+    }
 }

@@ -8,6 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { formatDuration } from 'date-fns';
 import TypeFilterComponent from '../components/typeFilterComponent.jsx';
 import FilterComponent from '../components/filterComponent.jsx';
+import api from '../api/api.jsx';
 
 
 export default function DisplayPortfolio() {
@@ -19,7 +20,7 @@ export default function DisplayPortfolio() {
 	const [toggleCleared, setToggleCleared] = useState(false);
 
 	const fetchData = () => {
-		axios.get("https://phanlop-portfolio-react-project.onrender.com/Portfolio")  // adjust endpoint as needed
+		axios.get(api.portfolio)  // adjust endpoint as needed
 			.then(res => {
 				console.log("Fetched education data:", res.data); // 👈 logs to browser console
 				setData(res.data);
@@ -63,7 +64,7 @@ export default function DisplayPortfolio() {
 	// }
 
 	const confirmDelete = (id) => (
-		axios.delete(`https://phanlop-portfolio-react-project.onrender.com/deletePortfolioById/${id}`)
+		axios.delete(`${api.deletePortfolioById}/${id}`)
 			.then(res => {
 				toast.success(`ID ${id} has been deleted`);
 				fetchData();

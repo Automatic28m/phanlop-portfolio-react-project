@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import BackendNavbar from "../components/backendNavbar.jsx";
 import { useNavigate, useParams } from 'react-router-dom'
-import Portfolio from "./home.jsx";
+import api from '../api/api.jsx';
 
 export default function EditPortfolio() {
 
@@ -22,7 +22,7 @@ export default function EditPortfolio() {
 
 
     useEffect(() => {
-        axios.get("https://phanlop-portfolio-react-project.onrender.com/getPortfolioType")
+        axios.get(api.getPortfolioType)
             .then(res => {
                 console.log("Fetched portfolio type data:", res.data);
                 setPortfolioType(res.data);
@@ -32,7 +32,7 @@ export default function EditPortfolio() {
 
     // Fetch portfolio data
     useEffect(() => {
-        axios.get(`https://phanlop-portfolio-react-project.onrender.com/getPortfolioById/${id}`)
+        axios.get(`${api.getPortfolioById}/${id}`)
             .then(res => {
                 console.log("Fetched portfolio:", res.data);
                 const data = res.data[0];
@@ -66,7 +66,7 @@ export default function EditPortfolio() {
         }
 
         try {
-            await axios.post(`https://phanlop-portfolio-react-project.onrender.com/updatePortfolioById/${id}`, formData, {
+            await axios.post(`${api.updatePortfolioById}/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

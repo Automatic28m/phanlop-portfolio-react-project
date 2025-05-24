@@ -2,13 +2,19 @@ import express, { response } from 'express'
 import cors from 'cors'
 import multer from 'multer';
 import path from 'path';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
 import { fileURLToPath } from 'url'; // Import the `fileURLToPath` function
+import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities, uploadImageGalleryToPortfolioId, getGalleryByPortfolioId, getAdminFromUsername, adminRegister } from './database.js'
+import verifyToken from './middleware/auth.js';
+
+dotenv.config();
 
 // Get the current directory using fileURLToPath
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // Get the directory name
 
-import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities, uploadImageGalleryToPortfolioId, getGalleryByPortfolioId } from './database.js'
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -54,6 +60,13 @@ const upload = multer({ storage });
 
 app.get("/", (req, res) => {
     res.send("API is running...");
+});
+
+app.get("/protected", verifyToken, (req, res) => {
+    res.status(200).json({
+        message: "This is a protected routed",
+        user: req.user
+    })
 });
 
 app.get("/portfolio", async (req, res) => {
@@ -153,7 +166,7 @@ app.get("/getGalleryByPortfolioId/:id", async (req, res) => {
 // app.listen(8080, () => console.log('Server is running on http://localhost:8080'));
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
 
 app.post("/updatePortfolioById/:id", upload.single('thumbnail'), async (req, res) => {
@@ -196,19 +209,84 @@ app.delete("/deletePortfolioById/:id", async (req, res) => {
 //     }
 // });
 
+app.post("/register", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        if (!(username, password)) {
+            return res.status(400).json({ message: "All input is required" });
+        }
+
+        const existed_user = await getAdminFromUsername(username);
+        if (existed_user.length > 0) {
+            return res.status(409).json({ message: "This username is already existed" });
+        }
+
+        const encryptedPassword = await bcrypt.hash(password, 10);
+
+        const registrationResult = await adminRegister(username, encryptedPassword);
+
+        if (registrationResult.status !== 201) {
+            return res.status(500).json({ message: registrationResult.message });
+        }
+
+        // Create JWT
+        const token = jwt.sign(
+            { user_id: registrationResult.userId, username },
+            process.env.TOKEN_KEY,
+            { expiresIn: "2h" }
+        )
+
+        return res.status(201).json({
+            message: registrationResult.message,
+            userId: registrationResult.userId,
+            token
+        });
+    } catch (error) {
+        console.error("Registration error: ", error.message);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+})
+
 app.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
-        const login = await adminLogin(username, password);
-
-        if (login.length > 0) {
-            res.status(200).json(login);
-        } else {
-            res.status(401).json({ error: "Username or password is incorrect!" });
+        if (!(username && password)) {
+            return res.status(400).send('All input is required');
         }
+
+        const rows = await adminLogin(username);
+
+        if (rows.length === 0) {
+            return res.status(401).send('Invalid username');
+        }
+
+        const user = rows[0];
+
+        console.log("Plain password:", password);
+        console.log("Hashed from DB:", user.password);
+
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).send('Invalid password');
+        }
+
+        const token = jwt.sign(
+            { user_id: user.user_id, username: user.username },
+            process.env.TOKEN_KEY,
+            { expiresIn: "2h" }
+        )
+
+        return res.status(200).json({
+            message: "Login successful",
+            userId: user.user_id,
+            token
+        });
+
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 })
 

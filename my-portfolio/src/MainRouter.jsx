@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './feature/home';
 import Portfolio from './feature/portfolio';
 import LoginPage from './feature/login';
+import LogoutPage from './feature/logout';
 import CreatePortfolio from './feature/createPortfolio';
 import DisplayPortfolio from './feature/displayPortfolio';
 import EditPortfolio from './feature/editPortfolio';
+import ProtectedRoute from './protectedRoute';
 
 const MainRouter = () => {
     return (
@@ -14,9 +16,12 @@ const MainRouter = () => {
                 <Route path='/' element={<Home />} />
                 <Route path='/portfolio/:id' element={<Portfolio />} />
                 <Route path='/login' element={<LoginPage />} />
-                <Route path='/createPortfolio' element={<CreatePortfolio />} />           
-                <Route path='/displayPortfolio' element={<DisplayPortfolio />} />           
-                <Route path='/editPortfolio/:id' element={<EditPortfolio />} />           
+
+                <Route path='/login' element={<ProtectedRoute><LoginPage /></ProtectedRoute>} />
+                <Route path='/Logout' element={<ProtectedRoute><LogoutPage /></ProtectedRoute>} />
+                <Route path='/createPortfolio' element={<ProtectedRoute><CreatePortfolio /></ProtectedRoute>} />
+                <Route path='/displayPortfolio' element={<ProtectedRoute><DisplayPortfolio /></ProtectedRoute>} />
+                <Route path='/editPortfolio/:id' element={<ProtectedRoute><EditPortfolio /></ProtectedRoute>} />
             </Routes>
         </Router>
     )

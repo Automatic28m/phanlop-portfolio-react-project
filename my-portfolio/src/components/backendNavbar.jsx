@@ -1,7 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { jwtDecode } from 'jwt-decode';
 
 export default function BackendNavbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [username, setUsername] = useState("Login");
+
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            try {
+                const decoded = jwtDecode(localStorage.getItem('token'));
+                setUsername(decoded.username);
+            } catch (error) {
+                console.error('Invalid token', error);
+            }
+        }
+    }, []);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -15,9 +28,11 @@ export default function BackendNavbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-6 text-sm font-medium">
+                        <h1 className="text-blue-600">Welcome {username}</h1>
                         <a href="/" className="hover:text-blue-600">Home</a>
                         <a href="/displayPortfolio" className="hover:text-blue-600">Display</a>
                         <a href="/createPortfolio" className="hover:text-blue-600">Create New</a>
+                        <a href="/logout" className="hover:text-blue-600">Logout</a>
                     </div>
 
                     {/* Mobile Hamburger Button */}
@@ -32,10 +47,12 @@ export default function BackendNavbar() {
 
                 {/* Mobile Menu */}
                 <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"} mt-4`}>
-                    <div className="space-y-4 text-sm font-medium">
+                    <div className="space-y-4 text-sm font-medium pb-6">
+                        <h1 className="text-blue-600">Welcome {username}</h1>
                         <a href="/" className="block text-blue-600 hover:text-blue-800">Home</a>
                         <a href="/displayPortfolio" className="block text-blue-600 hover:text-blue-800">Display</a>
                         <a href="/createPortfolio" className="block text-blue-600 hover:text-blue-800">Create New</a>
+                        <a href="/logout" className="block text-blue-600 hover:text-blue-800">Logout</a>
                     </div>
                 </div>
             </nav>

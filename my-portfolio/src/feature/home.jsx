@@ -9,8 +9,8 @@ import 'lightgallery/css/lg-thumbnail.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import LoadingCard from "../components/loadingCardComponent.jsx";
-import LoadingSkill from "../components/loadingSkillComponent.jsx";
 import LoadingSkillComponent from '../components/loadingSkillComponent.jsx';
+import api from '../api/api.jsx';
 
 export default function Portfolio() {
 
@@ -30,7 +30,7 @@ export default function Portfolio() {
 
 
   const fetchSkills = () => {
-    axios.get("https://phanlop-portfolio-react-project.onrender.com/getSkills")  // adjust endpoint as needed
+    axios.get(api.getSkills)  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched skills data:", res.data); // 👈 logs to browser console
         setSkill(res.data);
@@ -40,7 +40,7 @@ export default function Portfolio() {
   };
 
   const fetchProjects = () => {
-    axios.get("https://phanlop-portfolio-react-project.onrender.com/getProjects")  // adjust endpoint as needed
+    axios.get(api.getProjects)  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched projects data:", res.data); // 👈 logs to browser console
         setProject(res.data);
@@ -50,7 +50,7 @@ export default function Portfolio() {
   };
 
   const fetchAchievements = () => {
-    axios.get("https://phanlop-portfolio-react-project.onrender.com/getAcheivements")  // adjust endpoint as needed
+    axios.get(api.getAcheivements)  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched Acheivements data:", res.data); // 👈 logs to browser console
         setAcheivement(res.data);
@@ -60,7 +60,7 @@ export default function Portfolio() {
   };
 
   const fetchInternships = () => {
-    axios.get("https://phanlop-portfolio-react-project.onrender.com/getInternships")  // adjust endpoint as needed
+    axios.get(api.getInternships)  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched internships data:", res.data); // 👈 logs to browser console
         setInternship(res.data);
@@ -70,7 +70,7 @@ export default function Portfolio() {
   };
 
   const fetchActivities = () => {
-    axios.get("https://phanlop-portfolio-react-project.onrender.com/getActivities")  // adjust endpoint as needed
+    axios.get(api.getActivities)  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched activities data:", res.data); // 👈 logs to browser console
         setActivity(res.data);
@@ -80,7 +80,7 @@ export default function Portfolio() {
   };
 
   const fetchEducations = () => {
-    axios.get("https://phanlop-portfolio-react-project.onrender.com/getEducations")  // adjust endpoint as needed
+    axios.get(api.getEducations)  // adjust endpoint as needed
       .then(res => {
         console.log("Fetched education data:", res.data); // 👈 logs to browser console
         setEducation(res.data);

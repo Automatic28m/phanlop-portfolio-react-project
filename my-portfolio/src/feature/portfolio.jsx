@@ -8,6 +8,7 @@ import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
+import api from '../api/api.jsx';
 
 
 export default function Portfolio() {
@@ -17,13 +18,13 @@ export default function Portfolio() {
     const [gallery, setGallery] = useState([]);
 
     useEffect(() => {
-        axios.get(`https://phanlop-portfolio-react-project.onrender.com/getPortfolioById/${id}`)
+        axios.get(`${api.getPortfolioById}/${id}`)
             .then(res =>
                 setData(res.data[0]),
             )
             .catch(error => console.error('Error fetching detail: ', error));
 
-        axios.get(`https://phanlop-portfolio-react-project.onrender.com/getGalleryByPortfolioId/${id}`)
+        axios.get(`${api.getGalleryByPortfolioId}/${id}`)
             .then(res =>
                 setGallery(res.data),
             )

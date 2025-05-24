@@ -1,10 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 
 export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [username, setUsername] = useState("Login");
+    
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            try {
+                const decoded = jwtDecode(localStorage.getItem('token'));
+                setUsername(decoded.username);
+            } catch (error) {
+                console.error('Invalid token', error);
+            }
+        }
+    }, []);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -46,6 +59,7 @@ export default function Navbar() {
                                 {id.charAt(0).toUpperCase() + id.slice(1)}
                             </button>
                         ))}
+                        <a href="/login" className="hover:text-blue-600">{username}</a>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -60,7 +74,7 @@ export default function Navbar() {
 
                 {/* Mobile Menu */}
                 <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"} mt-4`}>
-                    <div className="space-y-4 text-sm font-medium">
+                    <div className="space-y-4 text-sm font-medium pb-6">
                         {["home", "about", "skills", "projects", "achievements", "internships", "activities", "education", "contact"].map((id) => (
                             <button
                                 key={id}
@@ -70,6 +84,7 @@ export default function Navbar() {
                                 {id.charAt(0).toUpperCase() + id.slice(1)}
                             </button>
                         ))}
+                        <a href="/login" className="block text-blue-600 hover:text-blue-800">{username}</a>
                     </div>
                 </div>
             </nav>
