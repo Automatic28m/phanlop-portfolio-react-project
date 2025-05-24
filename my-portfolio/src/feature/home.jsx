@@ -11,6 +11,7 @@ import lgZoom from 'lightgallery/plugins/zoom';
 import LoadingCard from "../components/loadingCardComponent.jsx";
 import LoadingSkillComponent from '../components/loadingSkillComponent.jsx';
 import api from '../api/api.jsx';
+import { Helmet } from 'react-helmet';
 
 export default function Portfolio() {
 
@@ -101,6 +102,9 @@ export default function Portfolio() {
 
   return (
     <div>
+      <Helmet>
+        <title>Phanlop's Portfolio</title>
+      </Helmet>
       <Navbar></Navbar>
       <main className="pt-16 min-h-screen bg-gray-50 text-gray-800 font-sans">
         {/* Hero Section */}

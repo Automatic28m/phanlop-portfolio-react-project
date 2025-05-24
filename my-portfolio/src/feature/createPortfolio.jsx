@@ -6,6 +6,7 @@ import BackendNavbar from "../components/backendNavbar.jsx";
 import { useNavigate } from "react-router-dom";
 import UploadGallery from "../components/uploadGalleryComponent.jsx";
 import api from '../api/api.jsx';
+import { Helmet } from "react-helmet";
 
 export default function CreatePortfolio() {
     const navigate = useNavigate();
@@ -70,6 +71,9 @@ export default function CreatePortfolio() {
 
     return (
         <div>
+            <Helmet>
+                <title>Create new portfolio</title>
+            </Helmet>
             <BackendNavbar />
             <div className="flex items-center justify-center h-screen bg-gray-100">
                 <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" enctype="multipart/form-data">

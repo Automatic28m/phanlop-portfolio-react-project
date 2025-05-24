@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css"
 import BackendNavbar from "../components/backendNavbar.jsx";
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../api/api.jsx';
+import { Helmet } from "react-helmet";
 
 export default function EditPortfolio() {
 
@@ -81,6 +82,9 @@ export default function EditPortfolio() {
 
     return (
         <div>
+            <Helmet>
+                <title>Edit Portfolio</title>
+            </Helmet>
             <BackendNavbar></BackendNavbar>
             <div className="flex items-center justify-center h-screen bg-gray-100">
                 <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" enctype="multipart/form-data">
@@ -103,7 +107,7 @@ export default function EditPortfolio() {
                             value={contents}
                             onChange={(e) => setContents(e.target.value)}
                             className="w-full p-2 border rounded"
-                            // required
+                        // required
                         />
                     </div>
 

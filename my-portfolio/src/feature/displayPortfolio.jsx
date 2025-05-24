@@ -9,6 +9,7 @@ import { formatDuration } from 'date-fns';
 import TypeFilterComponent from '../components/typeFilterComponent.jsx';
 import FilterComponent from '../components/filterComponent.jsx';
 import api from '../api/api.jsx';
+import { Helmet } from 'react-helmet';
 
 
 export default function DisplayPortfolio() {
@@ -223,6 +224,9 @@ export default function DisplayPortfolio() {
 
 	return (
 		<div>
+			<Helmet>
+				<title>Dashboard</title>
+			</Helmet>
 			<div><Toaster /></div>
 			<BackendNavbar></BackendNavbar>
 			<section className='pt-16'>

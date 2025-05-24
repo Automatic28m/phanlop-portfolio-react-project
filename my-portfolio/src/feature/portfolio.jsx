@@ -9,6 +9,7 @@ import 'lightgallery/css/lg-thumbnail.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import api from '../api/api.jsx';
+import { Helmet } from 'react-helmet';
 
 
 export default function Portfolio() {
@@ -41,6 +42,9 @@ export default function Portfolio() {
 
     return (
         <div>
+            <Helmet>
+                <title>Phanlop's Portfolio</title>
+            </Helmet>
             <Navbar></Navbar>
             <div className="pt-24 max-w-3xl mx-auto p-6">
                 <img src={`https://phanlop-portfolio-react-project.onrender.com/${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
