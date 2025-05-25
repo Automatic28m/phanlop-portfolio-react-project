@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import UploadGallery from "../components/uploadGalleryComponent.jsx";
 import api from '../api/api.jsx';
 import { Helmet } from "react-helmet";
+import ProcessingButtonComponent from "../components/processingButtonComponent.jsx";
 
 export default function CreatePortfolio() {
     const navigate = useNavigate();
@@ -19,6 +20,8 @@ export default function CreatePortfolio() {
     const [portfolioType, setPortfolioType] = useState([]);
     const [files, setFiles] = useState([]);
     const [showGalleryUpload, setShowGalleryUpload] = useState(true);
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         axios.get(api.getPortfolioType)
@@ -34,6 +37,8 @@ export default function CreatePortfolio() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);  // start loading
+
 
         const formattedDate = event_date ? event_date.toISOString().split('T')[0] : null;
         const formData = new FormData();
@@ -70,6 +75,8 @@ export default function CreatePortfolio() {
             navigate('/displayPortfolio');
         } catch (err) {
             console.error("Error creating portfolio:", err);
+        } finally {
+            setLoading(false);  // stop loading
         }
     };
 
@@ -155,9 +162,16 @@ export default function CreatePortfolio() {
                         </select>
                     </div>
 
-                    <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-                        Save Portfolio
-                    </button>
+                    {loading ? (
+                        <ProcessingButtonComponent />
+                    ) : (
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                        >
+                            Create
+                        </button>
+                    )}
                 </form>
             </div>
         </div>

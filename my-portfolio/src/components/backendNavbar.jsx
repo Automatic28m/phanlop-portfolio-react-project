@@ -24,7 +24,7 @@ export default function BackendNavbar() {
         <header className="bg-white shadow fixed w-full z-50">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    <div className="text-xl font-bold text-blue-600">Portfolio Manager</div>
+                    <div className="font-durer text-3xl font-bold bg-gradient-to-r from-blue-800 to-blue-200 bg-clip-text text-transparent">Portfolio Manager</div>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-6 text-sm font-medium">

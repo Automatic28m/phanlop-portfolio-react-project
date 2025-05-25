@@ -12,6 +12,26 @@ import LoadingCard from "../components/loadingCardComponent.jsx";
 import LoadingSkillComponent from '../components/loadingSkillComponent.jsx';
 import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
+import FadeInOnView from "../components/fadeInOnView.jsx";
+
+function ExamplePage() {
+  return (
+    <div className="space-y-10">
+      <FadeInOnView className="p-4 bg-gray-100">
+        <h1 className="text-3xl font-bold">Section 1</h1>
+      </FadeInOnView>
+
+      <FadeInOnView className="p-4 bg-blue-100">
+        <p>This is some content that fades in on scroll.</p>
+      </FadeInOnView>
+
+      <FadeInOnView className="p-4 bg-green-100">
+        <img src="/image.jpg" alt="Example" />
+      </FadeInOnView>
+    </div>
+  );
+}
+
 
 export default function Portfolio() {
 
@@ -99,7 +119,6 @@ export default function Portfolio() {
     fetchEducations();
   }, []);
 
-
   return (
     <div>
       <Helmet>
@@ -107,8 +126,9 @@ export default function Portfolio() {
       </Helmet>
       <Navbar></Navbar>
       <main className="pt-16 min-h-screen bg-gray-50 text-gray-800 font-sans">
+
         {/* Hero Section */}
-        <section id='hero' className="py-20 bg-white text-center">
+        <section id='hero' className="py-20 bg-white text-center ">
           <div className="flex justify-center mb-6">
             <img
               src="/profile.png"
@@ -116,7 +136,9 @@ export default function Portfolio() {
               className="w-40 h-40 rounded-full object-cover shadow-lg"
             />
           </div>
-          <h1 className="text-4xl font-bold mb-2">Hi, I'm Phanlop Boonluea</h1>
+          <div className='bg-gradient-to-r from-blue-800 to-blue-200 bg-clip-text text-transparent'>
+            <h1 className="text-5xl font-bold mb-2 font-durer">Hi, I'm Phanlop Boonluea</h1>
+          </div>
           <p className="text-lg mb-4">Computer Engineering Student</p>
           <div className="flex justify-center gap-4 text-gray-600">
             <a target="_blank" rel="noopener noreferrer" href="mailto:phanlop.auto@gmail.com"><Mail /></a>
@@ -128,26 +150,26 @@ export default function Portfolio() {
 
         {/* About Me */}
         <section id='about' className="px-6 py-16 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-semibold mb-4">About Me</h2>
-          <p>
+          <h2 className="text-3xl font-semibold mb-4 font-durer text-center">About Me</h2>
+          <p className='text-center'>
             I'm a passionate student developer who loves building user-friendly web apps. I'm currently studying at RMUTT University in Thailand and enjoy exploring new technology.
           </p>
         </section>
 
-
         {/* Skills */}
-        <section id='skills' className="px-6 py-16 bg-gray-100">
+        <section id='skills' className="px-6 py-16 bg-[url('./images/bg2.jpg')] bg-cover bg-fixed">
           {loadingSkills ? (
             <LoadingSkillComponent></LoadingSkillComponent>
           ) : (
-            <>
-              <h2 className="text-2xl font-semibold text-center mb-8">Skills & Experiences</h2>
+            <div className='max-w-3xl mx-auto'>
+              <h2 className="text-3xl font-semibold mb-8 font-durer text-center">Skills</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-xl mx-auto">
                 {skill.length > 0 && skill.map((item, index) => (
-                  <span key={index} className="bg-white p-4 rounded shadow">{item.title}</span>
+                  <span key={index} className="bg-white p-4 rounded shadow hover:text-blue-500 duration-700 transition">{item.title}</span>
                 ))}
               </div>
-            </>
+            </div>
+
           )}
         </section>
 
@@ -157,25 +179,31 @@ export default function Portfolio() {
             <LoadingCard></LoadingCard>
           ) : (
             <>
-              <h2 className="text-2xl font-semibold text-center mb-8">Projects</h2>
+              <FadeInOnView>
+                <h2 className="text-3xl font-durer font-semibold text-center mb-8">Projects</h2>
+              </FadeInOnView>
               <div className="grid gap-6 md:grid-cols-2">
                 {project.length > 0 && project.map((item, index) => (
-                  <a href={`portfolio/${item.id}`} className="bg-white rounded-lg shadow p-4 transition hover:shadow-xl" key={index}>
-                    <LightGallery
-                      speed={500}
-                      plugins={[lgThumbnail, lgZoom]}
-                    >
-                      <a
-                        className="gallery-item"
-                        data-src={`${api.base_url}/${item.thumbnail}`}
+                  <FadeInOnView className="bg-white rounded shadow transition hover:shadow-xl" key={index}>
+                    <a href={`portfolio/${item.id}`} >
+                      <LightGallery
+                        speed={500}
+                        plugins={[lgThumbnail, lgZoom]}
                       >
-                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
-                      </a>
-                    </LightGallery>
-                    <h3 className="font-bold text-lg">{item.title}</h3>
-                    <p className="text-sm">{item.contents}</p>
-                    <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
-                  </a>
+                        <a
+                          className="gallery-item"
+                          data-src={`${api.base_url}/${item.thumbnail}`}
+                        >
+                          <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                        </a>
+                      </LightGallery>
+                      <div className='p-4'>
+                        <h3 className="font-bold text-lg">{item.title}</h3>
+                        <p className="text-sm">{item.contents}</p>
+                        <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
+                      </div>
+                    </a>
+                  </FadeInOnView>
                 ))}
               </div>
             </>
@@ -183,15 +211,17 @@ export default function Portfolio() {
         </section>
 
         {/* Achievements */}
-        <section id='achievements' className="px-6 py-16 bg-gray-100">
+        <section id='achievements' className="px-6 py-16 bg-gray-100 bg-[url('./images/bg2.jpg')] bg-cover bg-fixed">
           {loadingAchievements ? (
             <LoadingCard></LoadingCard>
           ) : (
             <>
-              <h2 className="text-2xl font-semibold text-center mb-8">Achievements</h2>
+              <FadeInOnView>
+                <h2 className="text-3xl font-durer font-semibold text-center mb-8">Achievements</h2>
+              </FadeInOnView>
               <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {acheivement.length > 0 && acheivement.map((item, index) => (
-                  <div className="bg-white rounded-lg shadow p-4" key={index}>
+                  <FadeInOnView className='bg-white rounded-lg shadow' key={index}>
                     <LightGallery
                       speed={500}
                       plugins={[lgThumbnail, lgZoom]}
@@ -200,13 +230,15 @@ export default function Portfolio() {
                         className="gallery-item"
                         data-src={`${api.base_url}/${item.thumbnail}`}
                       >
-                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
                       </a>
                     </LightGallery>
-                    <h3 className="font-bold text-lg">{item.title}</h3>
-                    <p className="text-sm">{item.contents}</p>
-                    <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
-                  </div>
+                    <div className='p-4'>
+                      <h3 className="font-bold text-lg">{item.title}</h3>
+                      <p className="text-sm">{item.contents}</p>
+                      <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
+                    </div>
+                  </FadeInOnView>
                 ))}
               </div>
             </>
@@ -214,63 +246,75 @@ export default function Portfolio() {
         </section>
 
         {/* Internship Experiences */}
-        <section id='internships' className="px-6 py-16">
+        <section id='internships' className="px-6 py-16 px-6 py-16 ">
           {loadingInternships ? (
             <LoadingCard></LoadingCard>
           ) : (
             <>
-              <h2 className="text-2xl font-semibold text-center mb-8">Internship Experiences</h2>
-              <ul className="max-w-3xl mx-auto space-y-6">
+              <FadeInOnView>
+                <h2 className="text-3xl font-durer font-semibold text-center mb-8">Internship Experiences</h2>
+              </FadeInOnView>
+              <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {internship.length > 0 && internship.map((item, index) => (
-                  <li className="bg-white p-4 rounded shadow" key={index}>
-                    <LightGallery
-                      speed={500}
-                      plugins={[lgThumbnail, lgZoom]}
-                    >
-                      <a
-                        className="gallery-item"
-                        data-src={`${api.base_url}/${item.thumbnail}`}
+                  <FadeInOnView className="bg-white rounded-lg shadow" key={index}>
+                    <div>
+                      <LightGallery
+                        speed={500}
+                        plugins={[lgThumbnail, lgZoom]}
                       >
-                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
-                      </a>
-                    </LightGallery>
-                    <h3 className="font-bold">{item.title}</h3>
-                    <p className="mt-1 text-sm">{item.contents}</p>
-                    <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
-                  </li>
+                        <a
+                          className="gallery-item"
+                          data-src={`${api.base_url}/${item.thumbnail}`}
+                        >
+                          <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                        </a>
+                      </LightGallery>
+                      <div className='p-4'>
+                        <h3 className="font-bold">{item.title}</h3>
+                        <p className="mt-1 text-sm">{item.contents}</p>
+                        <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
+                      </div>
+                    </div>
+                  </FadeInOnView>
                 ))}
-              </ul>
+              </div>
             </>
           )}
         </section>
 
         {/* Academic Activities */}
-        <section id='activities' className="px-6 py-16 bg-gray-100">
+        <section id='activities' className="px-6 py-16 bg-gray-100 bg-[url('./images/bg2.jpg')] bg-cover bg-fixed">
           {loadingActivities ? (
             <LoadingCard></LoadingCard>
           ) : (
             <>
-              <h2 className="text-2xl font-semibold text-center mb-8">Academic Activities</h2>
-              <ul className="max-w-3xl mx-auto space-y-6">
+              <FadeInOnView>
+                <h2 className="text-3xl font-durer font-semibold text-center mb-8">Academic Activities</h2>
+              </FadeInOnView>
+              <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {activity.length > 0 && activity.map((item, index) => (
-                  <li className="bg-white p-4 rounded shadow" key={index}>
-                    <LightGallery
-                      speed={500}
-                      plugins={[lgThumbnail, lgZoom]}
-                    >
-                      <a
-                        className="gallery-item"
-                        data-src={`${api.base_url}/${item.thumbnail}`}
+                  <FadeInOnView className="bg-white rounded-lg shadow" key={index}>
+                    <div>
+                      <LightGallery
+                        speed={500}
+                        plugins={[lgThumbnail, lgZoom]}
                       >
-                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
-                      </a>
-                    </LightGallery>
-                    <h3 className="font-bold">{item.title}</h3>
-                    <p className="text-sm">{item.contents}</p>
-                    <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
-                  </li>
+                        <a
+                          className="gallery-item"
+                          data-src={`${api.base_url}/${item.thumbnail}`}
+                        >
+                          <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                        </a>
+                      </LightGallery>
+                      <div className='p-4'>
+                        <h3 className="font-bold">{item.title}</h3>
+                        <p className="text-sm">{item.contents}</p>
+                        <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
+                      </div>
+                    </div>
+                  </FadeInOnView>
                 ))}
-              </ul>
+              </div>
             </>
           )}
         </section>
@@ -281,16 +325,20 @@ export default function Portfolio() {
             <LoadingCard></LoadingCard>
           ) : (
             <>
-              <h2 className="text-2xl font-semibold text-center mb-8">Education</h2>
+              <FadeInOnView>
+                <h2 className="text-3xl font-durer font-semibold text-center mb-8">Education</h2>
+              </FadeInOnView>
               <ul className="max-w-2xl mx-auto space-y-4">
                 {education.length > 0 && education.map((item, index) => (
-                  <li key={index}>
-                    <div className="bg-white p-4 rounded shadow">
-                      <h3 className="font-bold">{item.title}</h3>
-                      <h3 className="font-bold">{item.contents}</h3>
-                      <p className="text-sm text-gray-600">{new Date(item.event_date).getFullYear()}</p>
-                    </div>
-                  </li>
+                  <FadeInOnView>
+                    <li key={index}>
+                      <div className="bg-white p-4 rounded shadow">
+                        <h3 className="font-bold">{item.title}</h3>
+                        <h3 className="font-bold">{item.contents}</h3>
+                        <p className="text-sm text-gray-600">{new Date(item.event_date).getFullYear()}</p>
+                      </div>
+                    </li>
+                  </FadeInOnView>
                 ))}
               </ul>
             </>
@@ -298,7 +346,7 @@ export default function Portfolio() {
         </section>
 
         {/* Contact */}
-        <section id='contact' className="px-6 py-16 text-center">
+        <section id='contact' className="px-6 py-16 text-center bg-[url('./images/bg1.jpg')] bg-cover bg-fixed">
           <h2 className="text-2xl font-semibold mb-4">Get In Touch</h2>
           <p className="mb-4">Feel free to reach out if you'd like to collaborate or just say hi!</p>
           <a

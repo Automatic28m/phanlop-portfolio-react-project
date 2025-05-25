@@ -6,6 +6,7 @@ import BackendNavbar from "../components/backendNavbar.jsx";
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../api/api.jsx';
 import { Helmet } from "react-helmet";
+import ProcessingButtonComponent from "../components/processingButtonComponent.jsx";
 
 export default function EditPortfolio() {
 
@@ -20,6 +21,7 @@ export default function EditPortfolio() {
     const [portfolioType, setPortfolioType] = useState([]);
     const [thumbnail, setThumbnail] = useState(null);  // To store selected image
     const [currentThumbnail, setCurrentThumbnail] = useState('');  // To display current image
+    const [loading, setLoading] = useState(false);
 
 
     useEffect(() => {
@@ -54,6 +56,7 @@ export default function EditPortfolio() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);  // start loading
 
         const formData = new FormData();
         formData.append('title', title);
@@ -80,6 +83,8 @@ export default function EditPortfolio() {
             navigate('/displayPortfolio');
         } catch (err) {
             console.error("Error updating portfolio:", err);
+        } finally {
+            setLoading(false);  // stop loading
         }
     };
 
@@ -172,9 +177,16 @@ export default function EditPortfolio() {
                         </select>
                     </div>
 
-                    <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-                        Save
-                    </button>
+                    {loading ? (
+                        <ProcessingButtonComponent />
+                    ) : (
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                        >
+                            Save
+                        </button>
+                    )}
                 </form>
             </div>
         </div>
