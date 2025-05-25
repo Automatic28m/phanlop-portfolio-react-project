@@ -17,7 +17,6 @@ const MainRouter = () => {
                 <Route path='/portfolio/:id' element={<Portfolio />} />
                 <Route path='/login' element={<LoginPage />} />
 
-                <Route path='/login' element={<ProtectedRoute><LoginPage /></ProtectedRoute>} />
                 <Route path='/Logout' element={<ProtectedRoute><LogoutPage /></ProtectedRoute>} />
                 <Route path='/createPortfolio' element={<ProtectedRoute><CreatePortfolio /></ProtectedRoute>} />
                 <Route path='/displayPortfolio' element={<ProtectedRoute><DisplayPortfolio /></ProtectedRoute>} />
