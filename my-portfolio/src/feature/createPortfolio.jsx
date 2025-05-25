@@ -35,7 +35,7 @@ export default function CreatePortfolio() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const formattedDate = event_date ? event_date.toISOString() : null;
+        const formattedDate = event_date ? event_date.toISOString().split('T')[0] : null;
         const formData = new FormData();
 
         formData.append("title", title);
@@ -56,6 +56,10 @@ export default function CreatePortfolio() {
         }
 
         try {
+            for (let pair of formData.entries()) {
+                console.log(`${pair[0]}:`, pair[1]);
+            }
+
             const res = await axios.post(api.createPortfolioAndGallery, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",

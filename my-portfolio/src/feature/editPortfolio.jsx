@@ -59,7 +59,7 @@ export default function EditPortfolio() {
         formData.append('title', title);
         formData.append('contents', contents);
         formData.append('event_location', event_location);
-        formData.append('event_date', event_date.toISOString()); // Convert date to string
+        formData.append('event_date', event_date.toISOString().split('T')[0]); // Convert date to string
         formData.append('portfolio_type_id', portfolio_type_id);
 
         if (thumbnail) {
