@@ -154,7 +154,7 @@ export default function EditPortfolio() {
                         {currentThumbnail && (
                             <div className="mt-4">
                                 <img
-                                    src={`${api.base_url}/${currentThumbnail}`}
+                                    src={`${currentThumbnail}`}
                                     alt="Current Thumbnail"
                                     className="w-full max-w-xs rounded"
                                 />

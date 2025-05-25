@@ -47,7 +47,7 @@ export default function Portfolio() {
             </Helmet>
             <Navbar></Navbar>
             <div className="pt-24 max-w-3xl mx-auto p-6">
-                <img src={`${api.base_url}/${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
+                <img src={`${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
                 <h1 className="text-3xl font-bold mb-2">{data.title}</h1>
                 <p className="text-gray-700 whitespace-pre-line">{data.contents}</p>
                 <p className='text-sm font-bold'>At {data.event_location}, {data.event_date}</p>
@@ -62,9 +62,9 @@ export default function Portfolio() {
                             >
                                 <a
                                     className="gallery-item"
-                                    data-src={`${api.base_url}/${item.img}`}
+                                    data-src={`${item.img}`}
                                 >
-                                    <img src={`${api.base_url}/${item.img}`} className="w-full h-48 object-cover rounded mb-2 shadow" />
+                                    <img src={`${item.img}`} className="w-full h-48 object-cover rounded mb-2 shadow" />
                                 </a>
                             </LightGallery>
                         ))}

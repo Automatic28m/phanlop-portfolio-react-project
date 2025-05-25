@@ -181,7 +181,7 @@ export default function DisplayPortfolio() {
 					<div>
 						{row.thumbnail ? (
 							<img
-								src={`${api.base_url}/${imagePath}`}  // Ensure full URL for access
+								src={`${imagePath}`}  // Ensure full URL for access
 								alt="Portfolio Thumbnail"
 								style={{ width: '100px', height: 'auto' }} // You can adjust the size here
 							/>

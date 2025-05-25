@@ -73,11 +73,11 @@ export async function getEducations() {
     return rows
 }
 
-export async function createPortfolio(title, contents, event_location, event_date, thumbnail, portfolio_type_id) {
+export async function createPortfolio(title, contents, event_location, event_date, thumbnail_url, portfolio_type_id) {
     const [result] = await pool.query(`
         INSERT INTO portfolio (title, contents, event_location, event_date, thumbnail, portfolio_type_id) 
         VALUES (?, ?, ?, ?, ?, ?)
-    `, [title, contents, event_location, event_date, thumbnail, portfolio_type_id]);
+    `, [title, contents, event_location, event_date, thumbnail_url, portfolio_type_id]);
 
     const id = result.insertId;
     return getPortfolioById(id);

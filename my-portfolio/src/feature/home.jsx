@@ -192,9 +192,9 @@ export default function Portfolio() {
                       >
                         <a
                           className="gallery-item"
-                          data-src={`${api.base_url}/${item.thumbnail}`}
+                          data-src={`${item.thumbnail}`}
                         >
-                          <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
                         </a>
                       </LightGallery>
                       <div className='p-4'>
@@ -228,9 +228,9 @@ export default function Portfolio() {
                     >
                       <a
                         className="gallery-item"
-                        data-src={`${api.base_url}/${item.thumbnail}`}
+                        data-src={`${item.thumbnail}`}
                       >
-                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                        <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
                       </a>
                     </LightGallery>
                     <div className='p-4'>
@@ -264,9 +264,9 @@ export default function Portfolio() {
                       >
                         <a
                           className="gallery-item"
-                          data-src={`${api.base_url}/${item.thumbnail}`}
+                          data-src={`${item.thumbnail}`}
                         >
-                          <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
                         </a>
                       </LightGallery>
                       <div className='p-4'>
@@ -301,9 +301,9 @@ export default function Portfolio() {
                       >
                         <a
                           className="gallery-item"
-                          data-src={`${api.base_url}/${item.thumbnail}`}
+                          data-src={`${item.thumbnail}`}
                         >
-                          <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
                         </a>
                       </LightGallery>
                       <div className='p-4'>

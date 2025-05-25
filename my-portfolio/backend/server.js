@@ -8,8 +8,16 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url'; // Import the `fileURLToPath` function
 import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities, uploadImageGalleryToPortfolioId, getGalleryByPortfolioId, getAdminFromUsername, adminRegister } from './database.js'
 import verifyToken from './middleware/auth.js';
+import { v2 as cloudinary } from 'cloudinary';
+import streamifier from 'streamifier';
 
 dotenv.config();
+
+cloudinary.config({
+    cloud_name: 'dwnwhonj6',
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // Get the current directory using fileURLToPath
 const __filename = fileURLToPath(import.meta.url);
@@ -45,18 +53,28 @@ const dateTimeFormatter = (portfolio) => {
     return portfolioFormatted
 }
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); //Generate Unique file name
-    }
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+// Helper: upload a buffer to Cloudinary
+const uploadToCloudinary = (fileBuffer, folder, public_id) => {
+    return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            { folder, public_id },
+            (error, result) => {
+                if (result) resolve(result.secure_url);
+                else reject(error);
+            }
+        );
+        streamifier.createReadStream(fileBuffer).pipe(uploadStream);
+    });
+};
+
+function extractCloudinaryPublicId(url) {
+    const match = url.match(/\/v\d+\/(.+?)\./); // Extract path after /v123456/ and before file extension
+    return match ? match[1] : null;
+}
+
 
 app.get("/", (req, res) => {
     res.send("API is running...");
@@ -132,24 +150,37 @@ app.post('/createPortfolioAndGallery', upload.fields([
     try {
         // Extract portfolio data from the request body
         const { title, contents, event_location, event_date, portfolio_type_id } = req.body;
+        const safeTitle = title.replace(/\s+/g, '_').toLowerCase();
+        const timestamp = Date.now();
 
-        // Normalize thumbnail path
-        const thumbnail = req.files.thumbnail
-            ? req.files.thumbnail[0].path.replace(/\\/g, '/')
-            : null;
+        // Upload thumbnail
+        let thumbnailUrl = null;
+        if (req.files.thumbnail && req.files.thumbnail[0]) {
+            const file = req.files.thumbnail[0];
+            // const ext = path.extname(file.originalname);
+            const fileName = `${safeTitle}_thumbnail_${timestamp}`;
+            thumbnailUrl = await uploadToCloudinary(file.buffer, 'portfolio_thumbnails', fileName);
+        }
 
-        // Normalize gallery image paths
-        const galleryImages = req.files.gallery_images
-            ? req.files.gallery_images.map(file => file.path.replace(/\\/g, '/'))
-            : [];
-
+        // Upload gallery images
+        let galleryImageUrls = [];
+        if (req.files.gallery_images) {
+            galleryImageUrls = await Promise.all(
+                req.files.gallery_images.map((file, index) => {
+                    const ext = path.extname(file.originalname);
+                    // const baseName = path.basename(file.originalname, ext).replace(/\s+/g, '_').toLowerCase();
+                    const fileName = `${safeTitle}_gallery_${index + 1}_${timestamp}`;
+                    return uploadToCloudinary(file.buffer, 'portfolio_galleries', fileName);
+                })
+            );
+        }
 
         // Create the portfolio in the database
-        const portfolio = await createPortfolio(title, contents, event_location, event_date, thumbnail, portfolio_type_id);
+        const portfolio = await createPortfolio(title, contents, event_location, event_date, thumbnailUrl, portfolio_type_id);
         const portfolioId = portfolio[0].id;
 
         // Upload gallery images associated with the portfolio
-        await uploadImageGalleryToPortfolioId(portfolioId, galleryImages);
+        await uploadImageGalleryToPortfolioId(portfolioId, galleryImageUrls);
 
         res.status(200).json({ message: 'Portfolio and gallery images uploaded successfully', portfolioId });
     } catch (err) {
@@ -177,29 +208,85 @@ app.listen(PORT, () => {
 app.post("/updatePortfolioById/:id", upload.single('thumbnail'), async (req, res) => {
     try {
         const id = req.params.id;
-        const { title, contents, event_location, event_date, portfolio_type_id } = req.body
-        let thumbnail = req.file ? req.file.path : null;
-        if (thumbnail) {
-            thumbnail = thumbnail.replace(/\\/g, '/'); // Normalize the path for consistency
+        const { title, contents, event_location, event_date, portfolio_type_id } = req.body;
+
+        let thumbnailUrl = null;
+
+        // Only process new thumbnail if provided
+        if (req.file) {
+            const timestamp = Date.now();
+            const safeTitle = title.replace(/\s+/g, '_').toLowerCase();
+            const fileName = `${safeTitle}_thumbnail_${timestamp}`;
+            thumbnailUrl = await uploadToCloudinary(req.file.buffer, 'portfolio_thumbnails', fileName);
         }
-        const portfolio = await updatePortfolioById(title, contents, event_location, event_date, thumbnail, portfolio_type_id, id);
+
+        const portfolio = await updatePortfolioById(
+            title,
+            contents,
+            event_location,
+            event_date,
+            thumbnailUrl,
+            portfolio_type_id,
+            id
+        );
+
         res.send(portfolio);
     } catch (err) {
         console.error("Error updating portfolio:", err);
         res.status(500).send({ message: "Update failed" });
     }
-})
+});
 
+// DELETE /deletePortfolioById/:id
 app.delete("/deletePortfolioById/:id", async (req, res) => {
     const id = req.params.id;
+
     try {
-        const portfolio = await deletePortfolioById(id);
-        res.send(portfolio);
+        // 1. Get the full portfolio details (including gallery images)
+        const portfolio = await getPortfolioById(id);
+
+        if (!portfolio) {
+            return res.status(404).json({ message: "Portfolio not found" });
+        }
+
+        // console.log("must delete thumbnail :", portfolio[0].thumbnail);
+        
+
+        // 2. Delete thumbnail from Cloudinary
+        if (portfolio[0].thumbnail) {
+            const publicId = extractCloudinaryPublicId(portfolio[0].thumbnail);
+            if (publicId) {
+                try {
+                    const result = await cloudinary.uploader.destroy(publicId);
+                    console.log("Cloudinary delete result:", result);
+                } catch (err) {
+                    console.error("Error deleting thumbnail from Cloudinary:", err);
+                }
+            }
+        }
+
+        const gallery = await getGalleryByPortfolioId(id);
+        // 3. Delete gallery images from Cloudinary
+        if (gallery && Array.isArray(gallery)) {
+            await Promise.all(
+                gallery.map(async (img) => {
+                    const galleryPublicId = extractCloudinaryPublicId(img.img);
+                    if (galleryPublicId) {
+                        await cloudinary.uploader.destroy(galleryPublicId);
+                    }
+                })
+            );
+        }
+
+        // 4. Delete from DB
+        await deletePortfolioById(id);
+
+        res.status(200).json({ message: "Portfolio and images deleted successfully" });
     } catch (error) {
         console.error("Error deleting portfolio:", error);
         res.status(500).send({ message: "Delete failed" });
     }
-})
+});
 
 // app.post('/upload-gallery/:portfolioId', upload.array('images', 10), async (req, res) => {
 //     const { portfolioId } = req.params;
