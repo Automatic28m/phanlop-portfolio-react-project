@@ -19,6 +19,7 @@ export default function DisplayPortfolio() {
 	const [perPage, setPerPage] = useState(10);
 	const [selectedRows, setSelectedRows] = useState([]);
 	const [toggleCleared, setToggleCleared] = useState(false);
+	const [loadingDelete, setLoadingDelete] = useState(false);
 
 	const fetchData = () => {
 		axios.get(api.portfolio)  // adjust endpoint as needed
@@ -64,17 +65,24 @@ export default function DisplayPortfolio() {
 	// 	), { duration: 10000 });
 	// }
 
-	const confirmDelete = (id) => (
-		axios.delete(`${api.deletePortfolioById}/${id}`)
-			.then(res => {
-				toast.success(`ID ${id} has been deleted`);
-				fetchData();
-			})
-			.catch(err => {
-				console.error("Error deleting:", err);
-				toast.error(`Error deleting ID : ${id}`);
-			})
-	)
+	const confirmDelete = (id) => {
+		setLoadingDelete(true);
+
+		toast.promise(
+			axios.delete(`${api.deletePortfolioById}/${id}`),
+			{
+				loading: `Deleting ID ${id}...`,
+				success: () => {
+					fetchData();  // refresh the table
+					return `ID ${id} has been deleted`;
+				},
+				error: `Error deleting ID ${id}`,
+			}
+		).finally(() => {
+			setLoadingDelete(false);
+		});
+	};
+
 
 	const handleRowSelected = useCallback(state => {
 		setSelectedRows(state.selectedRows);
@@ -230,26 +238,33 @@ export default function DisplayPortfolio() {
 			<div><Toaster /></div>
 			<BackendNavbar></BackendNavbar>
 			<section className='pt-16'>
-				<DataTable
-					title='Portfolio'
-					columns={columns}
-					data={filteredItems}
-					responsive
-					striped
-					pagination
-					onChangePage={(page) => setCurrentPage(page)}
-					onChangeRowsPerPage={(newPerPage, page) => {
-						setPerPage(newPerPage);
-						setCurrentPage(page);
-					}}
-					selectableRows
-					contextActions={contextActions}
-					onSelectedRowsChange={handleRowSelected}
-					clearSelectedRows={toggleCleared}
-					fixedHeader
-					subHeader
-					subHeaderComponent={subHeaderComponentMemo}
-				/>
+				{loadingDelete ? (
+					<></>
+				) : (
+					<>
+						<DataTable
+							title='Portfolio'
+							columns={columns}
+							data={filteredItems}
+							responsive
+							striped
+							pagination
+							onChangePage={(page) => setCurrentPage(page)}
+							onChangeRowsPerPage={(newPerPage, page) => {
+								setPerPage(newPerPage);
+								setCurrentPage(page);
+							}}
+							selectableRows
+							contextActions={contextActions}
+							onSelectedRowsChange={handleRowSelected}
+							clearSelectedRows={toggleCleared}
+							fixedHeader
+							subHeader
+							subHeaderComponent={subHeaderComponentMemo}
+						/>
+					</>
+				)}
+
 			</section>
 		</div>
 	);

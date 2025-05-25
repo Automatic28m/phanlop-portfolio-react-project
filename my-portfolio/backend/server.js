@@ -150,15 +150,13 @@ app.post('/createPortfolioAndGallery', upload.fields([
     try {
         // Extract portfolio data from the request body
         const { title, contents, event_location, event_date, portfolio_type_id } = req.body;
-        const safeTitle = title.replace(/\s+/g, '_').toLowerCase();
         const timestamp = Date.now();
 
         // Upload thumbnail
         let thumbnailUrl = null;
         if (req.files.thumbnail && req.files.thumbnail[0]) {
             const file = req.files.thumbnail[0];
-            // const ext = path.extname(file.originalname);
-            const fileName = `${safeTitle}_thumbnail_${timestamp}`;
+            const fileName = `${id}_thumbnail_${timestamp}`;
             thumbnailUrl = await uploadToCloudinary(file.buffer, 'portfolio_thumbnails', fileName);
         }
 
@@ -167,9 +165,7 @@ app.post('/createPortfolioAndGallery', upload.fields([
         if (req.files.gallery_images) {
             galleryImageUrls = await Promise.all(
                 req.files.gallery_images.map((file, index) => {
-                    const ext = path.extname(file.originalname);
-                    // const baseName = path.basename(file.originalname, ext).replace(/\s+/g, '_').toLowerCase();
-                    const fileName = `${safeTitle}_gallery_${index + 1}_${timestamp}`;
+                    const fileName = `${id}_gallery_${index + 1}_${timestamp}`;
                     return uploadToCloudinary(file.buffer, 'portfolio_galleries', fileName);
                 })
             );
@@ -215,8 +211,7 @@ app.post("/updatePortfolioById/:id", upload.single('thumbnail'), async (req, res
         // Only process new thumbnail if provided
         if (req.file) {
             const timestamp = Date.now();
-            const safeTitle = title.replace(/\s+/g, '_').toLowerCase();
-            const fileName = `${safeTitle}_thumbnail_${timestamp}`;
+            const fileName = `${id}_thumbnail_${timestamp}`;
             thumbnailUrl = await uploadToCloudinary(req.file.buffer, 'portfolio_thumbnails', fileName);
         }
 
@@ -250,7 +245,7 @@ app.delete("/deletePortfolioById/:id", async (req, res) => {
         }
 
         // console.log("must delete thumbnail :", portfolio[0].thumbnail);
-        
+
 
         // 2. Delete thumbnail from Cloudinary
         if (portfolio[0].thumbnail) {
