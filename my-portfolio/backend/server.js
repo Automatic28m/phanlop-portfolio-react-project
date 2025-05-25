@@ -133,11 +133,16 @@ app.post('/createPortfolioAndGallery', upload.fields([
         // Extract portfolio data from the request body
         const { title, contents, event_location, event_date, portfolio_type_id } = req.body;
 
-        // Handle thumbnail image
-        const thumbnail = req.files.thumbnail ? req.files.thumbnail[0].path : null;
+        // Normalize thumbnail path
+        const thumbnail = req.files.thumbnail
+            ? req.files.thumbnail[0].path.replace(/\\/g, '/')
+            : null;
 
-        // Handle gallery images
-        const galleryImages = req.files.gallery_images ? req.files.gallery_images.map(file => file.path) : [];
+        // Normalize gallery image paths
+        const galleryImages = req.files.gallery_images
+            ? req.files.gallery_images.map(file => file.path.replace(/\\/g, '/'))
+            : [];
+
 
         // Create the portfolio in the database
         const portfolio = await createPortfolio(title, contents, event_location, event_date, thumbnail, portfolio_type_id);

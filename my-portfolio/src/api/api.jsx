@@ -2,6 +2,7 @@ const BASE_URL = "https://phanlop-portfolio-react-project.onrender.com";
 // const BASE_URL = "http://localhost:8080";
 
 const api = {
+    base_url: BASE_URL,
     protected: `${BASE_URL}/protected`,
 
     // Home.jsx
@@ -29,7 +30,10 @@ const api = {
     updatePortfolioById: `${BASE_URL}/updatePortfolioById`,
     
     // portfolio.jsx
-    getGalleryByPortfolioId: `${BASE_URL}/getGalleryByPortfolioId`
+    getGalleryByPortfolioId: `${BASE_URL}/getGalleryByPortfolioId`,
+    
+    // uploadGalleryComponent.jsx
+    uploadGallery: `${BASE_URL}/upload-gallery`
 }
 
 export default api;

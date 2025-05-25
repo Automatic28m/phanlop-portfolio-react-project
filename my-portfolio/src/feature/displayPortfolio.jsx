@@ -134,9 +134,9 @@ export default function DisplayPortfolio() {
 			}
 		};
 		return (
-			<div className="flex gap-4">
-				<FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+			<div className="flex flex-col lg:flex sm:flex-row sm:gap-2">
 				<TypeFilterComponent onFilter={e => setFilterType(e.target.value)} onClear={handleClear} filterType={filterType} />
+				<FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
 			</div>
 		)
 	}, [filterText, filterType, resetPaginationToggle]);
@@ -181,7 +181,7 @@ export default function DisplayPortfolio() {
 					<div>
 						{row.thumbnail ? (
 							<img
-								src={`https://phanlop-portfolio-react-project.onrender.com/${imagePath}`}  // Ensure full URL for access
+								src={`${api.base_url}/${imagePath}`}  // Ensure full URL for access
 								alt="Portfolio Thumbnail"
 								style={{ width: '100px', height: 'auto' }} // You can adjust the size here
 							/>

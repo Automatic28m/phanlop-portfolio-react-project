@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useState, useEffect } from "react"
+import api from '../api/api.jsx';
 
 export default function TypeFilterComponent({filterType, onFilter, onClear}) {
 
     const [type, setType] = useState([]);
 
     const fetchType = () => {
-        axios.get("http://localhost:8080/getPortfolioType")
+        axios.get(api.getPortfolioType)
             .then(res => {
                 console.log("Fetched type data: ", res.data);
                 setType(res.data);

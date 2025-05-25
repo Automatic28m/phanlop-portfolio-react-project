@@ -167,9 +167,9 @@ export default function Portfolio() {
                     >
                       <a
                         className="gallery-item"
-                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                        data-src={`${api.base_url}/${item.thumbnail}`}
                       >
-                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                       </a>
                     </LightGallery>
                     <h3 className="font-bold text-lg">{item.title}</h3>
@@ -198,9 +198,9 @@ export default function Portfolio() {
                     >
                       <a
                         className="gallery-item"
-                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                        data-src={`${api.base_url}/${item.thumbnail}`}
                       >
-                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                       </a>
                     </LightGallery>
                     <h3 className="font-bold text-lg">{item.title}</h3>
@@ -229,9 +229,9 @@ export default function Portfolio() {
                     >
                       <a
                         className="gallery-item"
-                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                        data-src={`${api.base_url}/${item.thumbnail}`}
                       >
-                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                       </a>
                     </LightGallery>
                     <h3 className="font-bold">{item.title}</h3>
@@ -260,9 +260,9 @@ export default function Portfolio() {
                     >
                       <a
                         className="gallery-item"
-                        data-src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`}
+                        data-src={`${api.base_url}/${item.thumbnail}`}
                       >
-                        <img src={`https://phanlop-portfolio-react-project.onrender.com/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
+                        <img src={`${api.base_url}/${item.thumbnail}`} className="w-full h-48 object-cover rounded mb-2" />
                       </a>
                     </LightGallery>
                     <h3 className="font-bold">{item.title}</h3>

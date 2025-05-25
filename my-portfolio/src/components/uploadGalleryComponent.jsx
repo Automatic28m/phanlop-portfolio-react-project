@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from '../api/api.jsx';
 
 export default function UploadGallery({ portfolioId }) {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function UploadGallery({ portfolioId }) {
         files.forEach(file => formData.append("images", file));
 
         try {
-            const res = await axios.post(`http://localhost:8080/upload-gallery/${portfolioId}`, formData, {
+            const res = await axios.post(`${api.uploadGallery}/${portfolioId}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }

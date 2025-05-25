@@ -67,6 +67,10 @@ export default function EditPortfolio() {
         }
 
         try {
+            for (let pair of formData.entries()) {
+                console.log(`${pair[0]}:`, pair[1]);
+            }
+
             await axios.post(`${api.updatePortfolioById}/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -145,7 +149,7 @@ export default function EditPortfolio() {
                         {currentThumbnail && (
                             <div className="mt-4">
                                 <img
-                                    src={`https://phanlop-portfolio-react-project.onrender.com/${currentThumbnail}`}
+                                    src={`${api.base_url}/${currentThumbnail}`}
                                     alt="Current Thumbnail"
                                     className="w-full max-w-xs rounded"
                                 />
