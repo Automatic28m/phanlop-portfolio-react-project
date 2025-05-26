@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url'; // Import the `fileURLToPath` function
-import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities, uploadImageGalleryToPortfolioId, getGalleryByPortfolioId, getAdminFromUsername, adminRegister } from './database.js'
+import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities, uploadImageGalleryToPortfolioId, getGalleryByPortfolioId, getAdminFromUsername, adminRegister, deleteGalleryById, getGalleryById, countGalleryByPortfolioId } from './database.js'
 import verifyToken from './middleware/auth.js';
 import { v2 as cloudinary } from 'cloudinary';
 import streamifier from 'streamifier';
@@ -145,7 +145,7 @@ app.get("/getEducations", async (req, res) => {
 
 app.post('/createPortfolioAndGallery', upload.fields([
     { name: 'thumbnail', maxCount: 1 },  // thumbnail
-    { name: 'gallery_images', maxCount: 10 } // gallery images (up to 10)
+    { name: 'gallery_images', maxCount: 9 } // gallery images (up to 9)
 ]), async (req, res) => {
     try {
         // Extract portfolio data from the request body
@@ -156,7 +156,7 @@ app.post('/createPortfolioAndGallery', upload.fields([
         let thumbnailUrl = null;
         if (req.files.thumbnail && req.files.thumbnail[0]) {
             const file = req.files.thumbnail[0];
-            const fileName = `${id}_thumbnail_${timestamp}`;
+            const fileName = `thumbnail_${timestamp}`;
             thumbnailUrl = await uploadToCloudinary(file.buffer, 'portfolio_thumbnails', fileName);
         }
 
@@ -165,7 +165,7 @@ app.post('/createPortfolioAndGallery', upload.fields([
         if (req.files.gallery_images) {
             galleryImageUrls = await Promise.all(
                 req.files.gallery_images.map((file, index) => {
-                    const fileName = `${id}_gallery_${index + 1}_${timestamp}`;
+                    const fileName = `gallery_${index + 1}_${timestamp}`;
                     return uploadToCloudinary(file.buffer, 'portfolio_galleries', fileName);
                 })
             );
@@ -185,6 +185,49 @@ app.post('/createPortfolioAndGallery', upload.fields([
     }
 });
 
+app.post("/uploadMultipleGalleryImagesToPortfolioId", upload.array('gallery_images', 9), async (req, res) => {
+    try {
+        const { portfolio_id } = req.body;
+        const files = req.files;
+
+        if (!portfolio_id || !files || files.length === 0) {
+            return res.status(400).json({ message: "portfolio_id and at least one image file are required." });
+        }
+
+        const timestamp = Date.now();
+
+        // Upload each image to Cloudinary
+        const uploadedUrls = await Promise.all(
+            files.map((file, index) => {
+                const fileName = `gallery_${index + 1}_${timestamp}`;
+                return uploadToCloudinary(file.buffer, 'portfolio_galleries', fileName);
+            })
+        );
+
+        // Save image URLs to DB
+        await uploadImageGalleryToPortfolioId(portfolio_id, uploadedUrls);
+
+        res.status(200).json({
+            message: "Gallery images uploaded and saved successfully",
+            images: uploadedUrls,
+        });
+    } catch (error) {
+        console.error("Upload failed:", error);
+        res.status(500).json({ message: "Error uploading gallery images", error: error.message });
+    }
+});
+
+app.get("/countGalleryByPortfolioId/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const count = await countGalleryByPortfolioId(id);
+        res.json({ count }); // Return a JSON object
+    } catch (err) {
+        console.error("Error in /countGalleryByPortfolioId:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 app.get("/getGalleryByPortfolioId/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -192,6 +235,32 @@ app.get("/getGalleryByPortfolioId/:id", async (req, res) => {
         res.send(gallery);
     } catch (error) {
         console.error("Error in /getGalleryByPortfolioId:", err);
+    }
+})
+
+app.delete("/deleteGalleryById/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            return res.status(404).json({ message: "No gallery id" });
+        }
+
+        const gallery_img_data = await getGalleryById(id);
+        if (!gallery_img_data || gallery_img_data.length === 0) {
+            return res.status(404).json({ message: "Gallery image not found" });
+        }
+
+        const galleryPublicId = extractCloudinaryPublicId(gallery_img_data[0].img);
+        if (galleryPublicId) {
+            await cloudinary.uploader.destroy(galleryPublicId);
+        }
+
+        await deleteGalleryById(id);
+        res.status(200).send(`Delete gallery Id:${id} successful`);
+
+    } catch (error) {
+        console.error(`Error deleting gallery Id:${id}:`, error);
+        res.status(500).json({ message: `Error deleting gallery ID ${id}`, error: error.message });
     }
 })
 
@@ -211,7 +280,7 @@ app.post("/updatePortfolioById/:id", upload.single('thumbnail'), async (req, res
         // Only process new thumbnail if provided
         if (req.file) {
             const timestamp = Date.now();
-            const fileName = `${id}_thumbnail_${timestamp}`;
+            const fileName = `thumbnail_${timestamp}`;
             thumbnailUrl = await uploadToCloudinary(req.file.buffer, 'portfolio_thumbnails', fileName);
         }
 
@@ -245,7 +314,6 @@ app.delete("/deletePortfolioById/:id", async (req, res) => {
         }
 
         // console.log("must delete thumbnail :", portfolio[0].thumbnail);
-
 
         // 2. Delete thumbnail from Cloudinary
         if (portfolio[0].thumbnail) {

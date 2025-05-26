@@ -14,25 +14,6 @@ import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
 import FadeInOnView from "../components/fadeInOnView.jsx";
 
-function ExamplePage() {
-  return (
-    <div className="space-y-10">
-      <FadeInOnView className="p-4 bg-gray-100">
-        <h1 className="text-3xl font-bold">Section 1</h1>
-      </FadeInOnView>
-
-      <FadeInOnView className="p-4 bg-blue-100">
-        <p>This is some content that fades in on scroll.</p>
-      </FadeInOnView>
-
-      <FadeInOnView className="p-4 bg-green-100">
-        <img src="/image.jpg" alt="Example" />
-      </FadeInOnView>
-    </div>
-  );
-}
-
-
 export default function Portfolio() {
 
   const [skill, setSkill] = useState([]);
@@ -125,7 +106,7 @@ export default function Portfolio() {
         <title>Phanlop's Portfolio</title>
       </Helmet>
       <Navbar></Navbar>
-      <main className="pt-16 min-h-screen bg-gray-50 text-gray-800 font-sans">
+      <main className="pt-16 min-h-screen bg-gray-50/50 text-gray-800 font-sans">
 
         {/* Hero Section */}
         <section id='hero' className="py-20 bg-white text-center ">

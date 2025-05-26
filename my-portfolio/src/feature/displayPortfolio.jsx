@@ -15,20 +15,38 @@ import { Helmet } from 'react-helmet';
 export default function DisplayPortfolio() {
 	const navigate = useNavigate();
 	const [data, setData] = useState()
+	const [galleryCounts, setGalleryCounts] = useState({}); // key: portfolio_id, value: count
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 	const [selectedRows, setSelectedRows] = useState([]);
 	const [toggleCleared, setToggleCleared] = useState(false);
 	const [loadingDelete, setLoadingDelete] = useState(false);
 
-	const fetchData = () => {
-		axios.get(api.portfolio)  // adjust endpoint as needed
-			.then(res => {
-				console.log("Fetched education data:", res.data); // 👈 logs to browser console
-				setData(res.data);
-			})
-			.catch(err => console.error("Error fetching education data:", err));
-	}
+	const fetchData = async () => {
+		try {
+			const res = await axios.get(api.portfolio); // fetch all portfolios
+			const portfolios = res.data;
+			setData(portfolios);
+
+			// Fetch gallery counts in parallel
+			const counts = await Promise.all(
+				portfolios.map(async (p) => {
+					const res = await axios.get(`${api.countGalleryByPortfolioId}/${p.id}`);
+					return { id: p.id, count: res.data.count };
+				})
+			);
+
+			// Convert array to object: { [portfolio_id]: count }
+			const countMap = counts.reduce((acc, curr) => {
+				acc[curr.id] = curr.count;
+				return acc;
+			}, {});
+			setGalleryCounts(countMap);
+
+		} catch (err) {
+			console.error("Error fetching data:", err);
+		}
+	};
 
 	useEffect(() => {
 		fetchData();
@@ -37,6 +55,11 @@ export default function DisplayPortfolio() {
 	const handleEdit = async (e, id) => {
 		e.preventDefault();
 		navigate(`/editPortfolio/${id}`);
+	}
+
+	const handleEditGallery = async (e, id) => {
+		e.preventDefault();
+		navigate(`/editGallery/${id}`);
 	}
 
 	// const handleDelete = async (e, id) => {
@@ -153,32 +176,37 @@ export default function DisplayPortfolio() {
 		{
 			name: 'No.',
 			cell: (row, index) => ((currentPage - 1) * perPage) + index + 1,
-			width: '80px'
+			width: '50px',
 		},
 		{
 			name: 'ID',
 			selector: row => row.id,
 			sortable: 'true',
+			width: '50px'
 		},
 		{
 			name: 'Title',
 			selector: row => row.title,
 			sortable: 'true',
+			width: '200px'
 		},
 		{
 			name: 'Contents',
 			selector: row => row.contents,
 			sortable: 'true',
+			width: '200px'
 		},
 		{
 			name: 'Location',
 			selector: row => row.event_location,
 			sortable: 'true',
+			width: '100px'
 		},
 		{
 			name: 'Date Time',
 			selector: row => row.event_date,
 			sortable: 'true',
+			width: '120px'
 		},
 		{
 			name: 'Thumbnail',
@@ -198,25 +226,31 @@ export default function DisplayPortfolio() {
 						)}
 					</div>
 				)
-			}
+			},
+			width: '100px'
 		},
 		{
 			name: 'Type',
 			selector: row => row.type_title,
 			sortable: 'true',
+			width: '120px'
 		},
 		{
 			name: 'Date Time Created',
 			selector: row => row.created,
 			sortable: 'true',
+			width: '120px'
 		},
 		{
 			name: 'Actions',
 			cell: row => {
 				return (
-					<div>
-						<button className="pe-2" onClick={(e) => handleEdit(e, row.id)}>
-							Edit
+					<div className='flex flex-row gap-2'>
+						<button className="rounded bg-blue-500 text-white text-center hover:bg-white hover:text-blue-500 transition" onClick={(e) => handleEdit(e, row.id)}>
+							<p className='px-3 py-2'>Edit</p>
+						</button>
+						<button className="rounded bg-cyan-500 text-white text-center hover:bg-white hover:text-cyan-500 transition" onClick={(e) => handleEditGallery(e, row.id)}>
+							<p className='px-3 py-2'>Gallery ({galleryCounts[row.id] ?? 0}) {/* fallback to 0 */}</p>
 						</button>
 						{/* <button onClick={(e) => handleDelete(e, row.id)}>
 							Delete
@@ -227,6 +261,7 @@ export default function DisplayPortfolio() {
 			ignoreRowClick: true,
 			allowOverflow: true,
 			button: true,
+			width: '150px'
 		}
 	];
 

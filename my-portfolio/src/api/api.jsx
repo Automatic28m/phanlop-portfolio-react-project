@@ -16,6 +16,7 @@ const api = {
     // displayPortfolio.jsx
     portfolio : `${BASE_URL}/Portfolio`,
     deletePortfolioById : `${BASE_URL}/deletePortfolioById`,
+    countGalleryByPortfolioId : `${BASE_URL}/countGalleryByPortfolioId`,
 
     // createPortfolio.jsx
     getPortfolioType: `${BASE_URL}/getPortfolioType`,
@@ -28,6 +29,10 @@ const api = {
     // editPortfolio.jsx
     getPortfolioById: `${BASE_URL}/getPortfolioById`,
     updatePortfolioById: `${BASE_URL}/updatePortfolioById`,
+    uploadMultipleGalleryImagesToPortfolioId: `${BASE_URL}/uploadMultipleGalleryImagesToPortfolioId`,
+
+    // editGallery.jsx
+    deleteGalleryById: `${BASE_URL}/deleteGalleryById`,
     
     // portfolio.jsx
     getGalleryByPortfolioId: `${BASE_URL}/getGalleryByPortfolioId`,

@@ -37,7 +37,9 @@ export default function EditPortfolio() {
     useEffect(() => {
         axios.get(`${api.getPortfolioById}/${id}`)
             .then(res => {
+                console.log("Portfolio id :",res.data[0].id);
                 console.log("Fetched portfolio:", res.data);
+                
                 const data = res.data[0];
 
                 setTitle(data.title);

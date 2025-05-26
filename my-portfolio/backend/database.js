@@ -129,12 +129,38 @@ export async function uploadImageGalleryToPortfolioId(id, imageFilenames) {
     return result;
 }
 
+export async function getGalleryById(id) {
+    const [rows] = await pool.query(`
+            SELECT * 
+            FROM gallery
+            WHERE id = ?
+        `, [id])
+    return rows
+}
+
 export async function getGalleryByPortfolioId(id) {
     const [rows] = await pool.query(`
             SELECT * 
             FROM gallery
             WHERE portfolio_id = ?
         `, [id])
+    return rows
+}
+
+export async function countGalleryByPortfolioId(id) {
+    const [rows] = await pool.query(`
+        SELECT COUNT(*) AS count
+        FROM gallery
+        WHERE portfolio_id = ?
+    `, [id]);
+    return rows[0].count; // Return just the number
+}
+
+export async function deleteGalleryById(id) {
+    const [rows] = await pool.query(`
+        DELETE FROM gallery
+        WHERE id = ?
+        `, [id]);
     return rows
 }
 

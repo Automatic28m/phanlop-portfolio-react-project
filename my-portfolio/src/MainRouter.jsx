@@ -8,6 +8,7 @@ import CreatePortfolio from './feature/createPortfolio';
 import DisplayPortfolio from './feature/displayPortfolio';
 import EditPortfolio from './feature/editPortfolio';
 import ProtectedRoute from './protectedRoute';
+import EditGallery from './feature/editGallery';
 
 const MainRouter = () => {
     return (
@@ -21,6 +22,7 @@ const MainRouter = () => {
                 <Route path='/createPortfolio' element={<ProtectedRoute><CreatePortfolio /></ProtectedRoute>} />
                 <Route path='/displayPortfolio' element={<ProtectedRoute><DisplayPortfolio /></ProtectedRoute>} />
                 <Route path='/editPortfolio/:id' element={<ProtectedRoute><EditPortfolio /></ProtectedRoute>} />
+                <Route path='/editGallery/:id' element={<ProtectedRoute><EditGallery /></ProtectedRoute>} />
             </Routes>
         </Router>
     )

@@ -10,7 +10,7 @@ import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
-
+import FadeInOnView from '../components/fadeInOnView.jsx';
 
 export default function Portfolio() {
 
@@ -47,29 +47,45 @@ export default function Portfolio() {
             </Helmet>
             <Navbar></Navbar>
             <div className="pt-24 max-w-3xl mx-auto p-6">
-                <img src={`${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
-                <h1 className="text-3xl font-bold mb-2">{data.title}</h1>
-                <p className="text-gray-700 whitespace-pre-line">{data.contents}</p>
-                <p className='text-sm font-bold'>At {data.event_location}, {data.event_date}</p>
-                <div className="mt-4">
-                    <h2 className='mb-4 text-md font-bold'>Gallery</h2>
-                    <div className="grid grid-cols-3 gap-4">
-                        {gallery.length > 0 && gallery.map((item, index) => (
-                            <LightGallery
-                                speed={500}
-                                plugins={[lgThumbnail, lgZoom]}
-                                key={index}
-                            >
-                                <a
-                                    className="gallery-item"
-                                    data-src={`${item.img}`}
-                                >
-                                    <img src={`${item.img}`} className="w-full h-48 object-cover rounded mb-2 shadow" />
-                                </a>
-                            </LightGallery>
-                        ))}
+                <FadeInOnView>
+                    <img src={`${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
+                    <h1 className="text-3xl font-bold mb-2">{data.title}</h1>
+                    <p className="text-gray-700 whitespace-pre-line mb-2">{data.contents}</p>
+                    <p className='text-sm font-bold'>At {data.event_location}, {data.event_date}</p>
+                </FadeInOnView>
+                {gallery.length === 0 ? (
+                    <></>
+                ) : (
+                    <div className="mt-4">
+                        <FadeInOnView>
+                            <div className='my-6'>
+                                <div className="flex items-center">
+                                    <span className="text-gray-500 font-semibold mr-4">Gallery</span>
+                                    <div className="flex-grow border-t border-gray-300"></div>
+                                </div>
+                                <p className='text-gray-500 text-left text-xs'>Click to see full image</p>
+                            </div>
+                        </FadeInOnView>
+                        <FadeInOnView>
+                            <div className="grid grid-cols-3 gap-x-1 gap-y-1">
+                                {gallery.length > 0 && gallery.map((item, index) => (
+                                    <LightGallery
+                                        speed={500}
+                                        plugins={[lgThumbnail, lgZoom]}
+                                        key={index}
+                                    >
+                                        <a
+                                            className="gallery-item"
+                                            data-src={`${item.img}`}
+                                        >
+                                            <img src={`${item.img}`} className="w-full h-48 object-cover rounded shadow cursor-pointer" />
+                                        </a>
+                                    </LightGallery>
+                                ))}
+                            </div>
+                        </FadeInOnView>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     )
