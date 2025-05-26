@@ -10,7 +10,7 @@ import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
-import FadeInOnView from '../components/fadeInOnView.jsx';
+import FadeInOnView from '../components/animations/fadeInOnView.jsx';
 
 export default function Portfolio() {
 
@@ -46,7 +46,7 @@ export default function Portfolio() {
                 <title>Phanlop's Portfolio</title>
             </Helmet>
             <Navbar></Navbar>
-            <div className="pt-24 max-w-3xl mx-auto p-6">
+            <div className="px-6 pt-24 max-w-3xl mx-auto py-20">
                 <FadeInOnView>
                     <img src={`${data.thumbnail}`} alt="Thumbnail" className="w-full object-cover rounded mb-4 shadow" />
                     <h1 className="text-3xl font-bold mb-2">{data.title}</h1>
@@ -67,22 +67,25 @@ export default function Portfolio() {
                             </div>
                         </FadeInOnView>
                         <FadeInOnView>
-                            <div className="grid grid-cols-3 gap-x-1 gap-y-1">
+                            <LightGallery
+                                speed={500}
+                                plugins={[lgThumbnail, lgZoom]}
+                                thumbnail={true}
+                                elementClassNames="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1"
+                            >
                                 {gallery.length > 0 && gallery.map((item, index) => (
-                                    <LightGallery
-                                        speed={500}
-                                        plugins={[lgThumbnail, lgZoom]}
+                                    <a
                                         key={index}
+                                        data-src={item.img}
                                     >
-                                        <a
-                                            className="gallery-item"
-                                            data-src={`${item.img}`}
-                                        >
-                                            <img src={`${item.img}`} className="w-full h-48 object-cover rounded shadow cursor-pointer" />
-                                        </a>
-                                    </LightGallery>
+                                        <img
+                                            src={item.img}
+                                            className="w-full h-48 object-cover rounded shadow cursor-pointer"
+                                        />
+                                    </a>
                                 ))}
-                            </div>
+                            </LightGallery>
+
                         </FadeInOnView>
                     </div>
                 )}

@@ -12,7 +12,9 @@ import LoadingCard from "../components/loadingCardComponent.jsx";
 import LoadingSkillComponent from '../components/loadingSkillComponent.jsx';
 import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
-import FadeInOnView from "../components/fadeInOnView.jsx";
+import FadeInOnView from "../components/animations/fadeInOnView.jsx";
+import WavyText from '../components/animations/wavyText.jsx';
+import { Typewriter } from '../components/animations/typeWriter.jsx';
 
 export default function Portfolio() {
 
@@ -132,13 +134,31 @@ export default function Portfolio() {
         {/* About Me */}
         <section id='about' className="px-6 py-16 max-w-3xl mx-auto">
           <h2 className="text-3xl font-semibold mb-4 font-durer text-center">About Me</h2>
-          <p className='text-center'>
-            I'm a passionate student developer who loves building user-friendly web apps. I'm currently studying at RMUTT University in Thailand and enjoy exploring new technology.
+          <p className="text-center">
+            <Typewriter
+              text="I'm a passionate student developer who loves building user-friendly web apps. I'm currently studying at RMUTT University in Thailand and enjoy exploring new technology."
+            />
           </p>
         </section>
 
+        <FadeInOnView>
+          <section id="quote" className="px-6 pt-16 max-w-3xl mx-auto flex justify-center z-0">
+            <div className="max-w-md flex justify-center items-center w-full h-96 overflow-hidden relative">
+              <img
+                src="/realistic-front-view-smartphone-mockup-mobile-iphone-purple-frame-with-blank-white-display-vector.png"
+                alt="Smartphone"
+                className="object-cover object-top w-full h-full"
+              />
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center px-4 font-durer text-4xl font-bold bg-gradient-to-r from-blue-800 to-blue-200 bg-clip-text text-transparent">
+                Let's know me better through my portfolio!
+              </div>
+            </div>
+          </section>
+        </FadeInOnView>
+
+
         {/* Skills */}
-        <section id='skills' className="px-6 py-16 bg-[url('./images/bg2.jpg')] bg-cover bg-fixed">
+        <section id='skills' className="px-6 py-16 bg-[url('./images/bg2.jpg')] bg-cover bg-fixed z-50">
           {loadingSkills ? (
             <LoadingSkillComponent></LoadingSkillComponent>
           ) : (
@@ -203,22 +223,24 @@ export default function Portfolio() {
               <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {acheivement.length > 0 && acheivement.map((item, index) => (
                   <FadeInOnView className='bg-white rounded-lg shadow' key={index}>
-                    <LightGallery
-                      speed={500}
-                      plugins={[lgThumbnail, lgZoom]}
-                    >
-                      <a
-                        className="gallery-item"
-                        data-src={`${item.thumbnail}`}
+                    <a href={`portfolio/${item.id}`} >
+                      <LightGallery
+                        speed={500}
+                        plugins={[lgThumbnail, lgZoom]}
                       >
-                        <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
-                      </a>
-                    </LightGallery>
-                    <div className='p-4'>
-                      <h3 className="font-bold text-lg">{item.title}</h3>
-                      <p className="text-sm">{item.contents}</p>
-                      <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
-                    </div>
+                        <a
+                          className="gallery-item"
+                          data-src={`${item.thumbnail}`}
+                        >
+                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                        </a>
+                      </LightGallery>
+                      <div className='p-4'>
+                        <h3 className="font-bold text-lg">{item.title}</h3>
+                        <p className="text-sm">{item.contents}</p>
+                        <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
+                      </div>
+                    </a>
                   </FadeInOnView>
                 ))}
               </div>
@@ -238,7 +260,7 @@ export default function Portfolio() {
               <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {internship.length > 0 && internship.map((item, index) => (
                   <FadeInOnView className="bg-white rounded-lg shadow" key={index}>
-                    <div>
+                    <a href={`portfolio/${item.id}`} >
                       <LightGallery
                         speed={500}
                         plugins={[lgThumbnail, lgZoom]}
@@ -255,7 +277,7 @@ export default function Portfolio() {
                         <p className="mt-1 text-sm">{item.contents}</p>
                         <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
                       </div>
-                    </div>
+                    </a>
                   </FadeInOnView>
                 ))}
               </div>
@@ -275,7 +297,7 @@ export default function Portfolio() {
               <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {activity.length > 0 && activity.map((item, index) => (
                   <FadeInOnView className="bg-white rounded-lg shadow" key={index}>
-                    <div>
+                    <a href={`portfolio/${item.id}`} >
                       <LightGallery
                         speed={500}
                         plugins={[lgThumbnail, lgZoom]}
@@ -292,7 +314,7 @@ export default function Portfolio() {
                         <p className="text-sm">{item.contents}</p>
                         <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
                       </div>
-                    </div>
+                    </a>
                   </FadeInOnView>
                 ))}
               </div>
