@@ -3,12 +3,29 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Login() {
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      navigate('/displayPortfolio'); // or wherever
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const isExpired = decoded.exp * 1000 < Date.now(); // exp is in seconds
+
+        if (isExpired) {
+          localStorage.removeItem('token'); // optional
+          navigate('/login'); // redirect to login or any other route
+        } else {
+          navigate('/displayPortfolio'); // still valid
+        }
+      } catch (error) {
+        console.error('Invalid token:', error);
+        localStorage.removeItem('token');
+        navigate('/login'); // fallback if token is malformed
+      }
     }
   }, []);
 
@@ -40,7 +57,7 @@ export default function Login() {
       <Helmet>
         <title>Login</title>
       </Helmet>
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-100  max-w-3xl">
         <form onSubmit={handleLogin} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mb-6">
           <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 

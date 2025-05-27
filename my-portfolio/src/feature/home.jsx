@@ -15,6 +15,8 @@ import { Helmet } from 'react-helmet';
 import FadeInOnView from "../components/animations/fadeInOnView.jsx";
 import WavyText from '../components/animations/wavyText.jsx';
 import { Typewriter } from '../components/animations/typeWriter.jsx';
+import TextScrollerComponent from '../components/textScrollerComponent.jsx';
+import LogoScrollerComponent from '../components/logoScrollerComponent copy.jsx';
 
 export default function Portfolio() {
 
@@ -111,50 +113,96 @@ export default function Portfolio() {
       <main className="pt-16 min-h-screen bg-gray-50/50 text-gray-800 font-sans">
 
         {/* Hero Section */}
-        <section id='hero' className="py-20 bg-white text-center ">
-          <div className="flex justify-center mb-6">
-            <img
-              src="/profile.png"
-              alt="Profile"
-              className="w-40 h-40 rounded-full object-cover shadow-lg"
-            />
-          </div>
-          <div className='bg-gradient-to-r from-blue-800 to-blue-200 bg-clip-text text-transparent'>
-            <h1 className="text-5xl font-bold mb-2 font-durer">Hi, I'm Phanlop Boonluea</h1>
-          </div>
-          <p className="text-lg mb-4">Computer Engineering Student</p>
-          <div className="flex justify-center gap-4 text-gray-600">
-            <a target="_blank" rel="noopener noreferrer" href="mailto:phanlop.auto@gmail.com"><Mail /></a>
-            <a target="_blank" rel="noopener noreferrer" href="https://github.com/Automatic28m"><Github /></a>
-            {/* <a href="https://linkedin.com/in/janedoe"><Linkedin /></a> */}
-            <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/automatic.pb/"><Instagram /></a>
+        <section id='hero' className="flex flex-col-reverse sm:flex-row bg-cover bg-fixed bg-[url('./images/bg2.jpg')] object-cover text-gray">
+          <FadeInOnView duration={0.5}>
+            <div className="">
+              <img
+                src="/images/profile.png"
+                alt="Profile"
+                className="size-[500px] md:size-[800px] h-full object-cover"
+              />
+            </div>
+          </FadeInOnView>
+          <div className="flex flex-col gap-y-5 pt-16 sm:p-0 justify-center align-center text-left px-6">
+            <FadeInOnView
+              className='bg-gradient-to-r from-blue-800 to-sky-300 bg-clip-text text-transparent'
+              duration={1}>
+              <Typewriter
+                text="Hi, I'm Phanlop Boonluea"
+                className="text-6xl font-bold mb-2 font-durer"
+                staggerChildren={0.1}
+              />
+              {/* <h1 className="text-6xl font-bold mb-2 font-durer">Hi, I'm Phanlop Boonluea</h1> */}
+            </FadeInOnView>
+            <FadeInOnView duration={1.5}>
+              <Typewriter
+                text="Computer Engineering Student" className="text-lg mb-4 text-gray-600" staggerChildren={0.1}
+              />
+            </FadeInOnView>
+            <div className="flex justify-left gap-4 text-gray-600">
+              <FadeInOnView duration={2}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="mailto:phanlop.auto@gmail.com"
+                  className='hover:text-white transition'
+                >
+                  <Mail />
+                </a>
+              </FadeInOnView>
+              <FadeInOnView duration={2.5}>
+                <a
+                  target="lank"
+                  rel="noopener noreferrer"
+                  href="https://github.com/Automatic28m"
+                  className='hover:text-white transition'
+                >
+                  <Github />
+                </a>
+              </FadeInOnView>
+              <FadeInOnView duration={3}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://www.instagram.com/automatic.pb/"
+                  className='hover:text-white transition'
+                >
+                  <Instagram />
+                </a>
+              </FadeInOnView>
+            </div>
           </div>
         </section>
+
+        <TextScrollerComponent className='bg-gray-100'></TextScrollerComponent>
+
 
         {/* About Me */}
-        <section id='about' className="px-6 py-16 max-w-3xl mx-auto">
-          <h2 className="text-3xl font-semibold mb-4 font-durer text-center">About Me</h2>
-          <p className="text-center">
-            <Typewriter
-              text="I'm a passionate student developer who loves building user-friendly web apps. I'm currently studying at RMUTT University in Thailand and enjoy exploring new technology."
-            />
-          </p>
-        </section>
-
-        <FadeInOnView>
-          <section id="quote" className="px-6 pt-16 max-w-3xl mx-auto flex justify-center z-0">
-            <div className="max-w-md flex justify-center items-center w-full h-96 overflow-hidden relative">
-              <img
-                src="/realistic-front-view-smartphone-mockup-mobile-iphone-purple-frame-with-blank-white-display-vector.png"
-                alt="Smartphone"
-                className="object-cover object-top w-full h-full"
+        <section id='about' className='grid grid-cols-1 sm:grid-cols-2 gap-6 px-6 max-w-3xl mx-auto'>
+          <section className="flex flex-col justify-center pt-16 sm:pt-0">
+            <h2 className="text-3xl font-semibold mb-4 font-durer text-left">About Me</h2>
+            <p className="text-left">
+              <Typewriter
+                text="I'm a passionate student developer who loves building user-friendly web apps. I'm currently studying at RMUTT University in Thailand and enjoy exploring new technology."
               />
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center px-4 font-durer text-4xl font-bold bg-gradient-to-r from-blue-800 to-blue-200 bg-clip-text text-transparent">
-                Let's know me better through my portfolio!
-              </div>
-            </div>
+            </p>
           </section>
-        </FadeInOnView>
+
+          <FadeInOnView>
+            <section id="quote" className="px-6 pt-8 max-w-3xl mx-auto flex justify-center z-0">
+              <div className="max-w-md flex justify-center items-center w-full h-96 overflow-hidden relative">
+                <img
+                  src="/realistic-front-view-smartphone-mockup-mobile-iphone-purple-frame-with-blank-white-display-vector.png"
+                  alt="Smartphone"
+                  className="object-cover object-top w-full h-full"
+                />
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 text-center px-8 font-durer text-4xl font-bold bg-gradient-to-r from-blue-800 to-blue-200 bg-clip-text text-transparent">
+                  Let's know me better through my portfolio!
+                </div>
+              </div>
+            </section>
+          </FadeInOnView>
+        </section>
 
 
         {/* Skills */}
@@ -169,10 +217,46 @@ export default function Portfolio() {
                   <span key={index} className="bg-white p-4 rounded shadow hover:text-blue-500 duration-700 transition">{item.title}</span>
                 ))}
               </div>
+              <LogoScrollerComponent></LogoScrollerComponent>
             </div>
-
           )}
         </section>
+
+        {/* <div className="col-span-2 grid grid-cols-2 gap-2 overflow-hidden h-[500px]"> */}
+
+        {/* Scroll Up */}
+        {/* <div className="overflow-hidden h-full">
+            <div className="animate-scrollUp">
+              <div className="flex flex-col gap-3">
+                {[...Array(2)].map((_, i) => (
+                  <React.Fragment key={i}>
+                    <img src="/images/pollanswer/image (6).png" className="shadow-md" />
+                    <img src="/images/pollanswer/image (5).png" className="shadow-md" />
+                    <img src="/images/pollanswer/image (4).png" className="shadow-md" />
+                    <img src="/images/pollanswer/image (3).png" className="shadow-md" />
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </div> */}
+
+        {/* // Scroll Down */}
+        {/* <div className="overflow-hidden h-full">
+            <div className="animate-scrollDown">
+              <div className="flex flex-col gap-3">
+                {[...Array(2)].map((_, i) => (
+                  <React.Fragment key={i}>
+                    <img src="/images/pollanswer/image (1).png" className="shadow-md" />
+                    <img src="/images/pollanswer/image (2).png" className="shadow-md" />
+                    <img src="/images/pollanswer/image (3).png" className="shadow-md" />
+                    <img src="/images/pollanswer/image.png" className="shadow-md" />
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </div> */}
+
+        {/* </div> */}
 
         {/* Projects */}
         <section id='projects' className="px-6 py-16 max-w-5xl mx-auto">
@@ -350,14 +434,40 @@ export default function Portfolio() {
 
         {/* Contact */}
         <section id='contact' className="px-6 py-16 text-center bg-[url('./images/bg1.jpg')] bg-cover bg-fixed">
-          <h2 className="text-2xl font-semibold mb-4">Get In Touch</h2>
-          <p className="mb-4">Feel free to reach out if you'd like to collaborate or just say hi!</p>
-          <a
-            href="mailto:phanlop.auto@gmail.com"
-            className="inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-          >
-            Contact Me
-          </a>
+          <h2 className="text-2xl font-semibold mb-4 font-durer">Get In Touch</h2>
+          <p className="mb-4 text-gray-600">Feel free to reach out if you'd like to collaborate or just say hi!</p>
+          <div className="flex justify-center gap-4 text-gray-600">
+            <FadeInOnView duration={2}>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="mailto:phanlop.auto@gmail.com"
+                className='hover:text-white transition'
+              >
+                <Mail />
+              </a>
+            </FadeInOnView>
+            <FadeInOnView duration={2.5}>
+              <a
+                target="lank"
+                rel="noopener noreferrer"
+                href="https://github.com/Automatic28m"
+                className='hover:text-white transition'
+              >
+                <Github />
+              </a>
+            </FadeInOnView>
+            <FadeInOnView duration={3}>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://www.instagram.com/automatic.pb/"
+                className='hover:text-white transition'
+              >
+                <Instagram />
+              </a>
+            </FadeInOnView>
+          </div>
         </section>
       </main>
     </div >

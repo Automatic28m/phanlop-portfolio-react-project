@@ -49,7 +49,7 @@ export default function Navbar() {
                     <a href="/" className="font-durer text-3xl font-bold bg-gradient-to-r from-blue-800 to-blue-200 bg-clip-text text-transparent">Phanlop's Portfolio</a>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-6 text-sm font-medium">
+                    <div className="hidden lg:flex space-x-6 text-sm font-medium">
                         {["home", "about", "skills", "projects", "achievements", "internships", "activities", "education", "contact"].map((id) => (
                             <button
                                 key={id}
@@ -63,7 +63,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="md:hidden">
+                    <div className="lg:hidden">
                         <button onClick={toggleMobileMenu} className="text-gray-500 hover:text-blue-600">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -73,7 +73,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Mobile Menu */}
-                <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"} mt-4`}>
+                <div className={`lg:hidden ${isMobileMenuOpen ? "block" : "hidden"} mt-4`}>
                     <div className="space-y-4 text-sm font-medium pb-6">
                         {["home", "about", "skills", "projects", "achievements", "internships", "activities", "education", "contact"].map((id) => (
                             <button
