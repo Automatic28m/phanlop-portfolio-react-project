@@ -17,6 +17,7 @@ import WavyText from '../components/animations/wavyText.jsx';
 import { Typewriter } from '../components/animations/typeWriter.jsx';
 import TextScrollerComponent from '../components/textScrollerComponent.jsx';
 import LogoScrollerComponent from '../components/logoScrollerComponent copy.jsx';
+import Footer from '../components/footer.jsx';
 
 export default function Portfolio() {
 
@@ -105,7 +106,7 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div>
+    <div className='flex flex-col min-h-screen'>
       <Helmet>
         <title>Phanlop's Portfolio</title>
       </Helmet>
@@ -269,17 +270,17 @@ export default function Portfolio() {
               </FadeInOnView>
               <div className="grid gap-6 md:grid-cols-2">
                 {project.length > 0 && project.map((item, index) => (
-                  <FadeInOnView className="bg-white rounded shadow transition hover:shadow-xl" key={index}>
+                  <FadeInOnView className="bg-white rounded shadow" key={index}>
                     <a href={`portfolio/${item.id}`} >
                       <LightGallery
                         speed={500}
                         plugins={[lgThumbnail, lgZoom]}
                       >
                         <a
-                          className="gallery-item"
+                          className="gallery-item w-full"
                           data-src={`${item.thumbnail}`}
                         >
-                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
                         </a>
                       </LightGallery>
                       <div className='p-4'>
@@ -313,10 +314,10 @@ export default function Portfolio() {
                         plugins={[lgThumbnail, lgZoom]}
                       >
                         <a
-                          className="gallery-item"
+                          className="gallery-item w-full"
                           data-src={`${item.thumbnail}`}
                         >
-                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
                         </a>
                       </LightGallery>
                       <div className='p-4'>
@@ -350,10 +351,10 @@ export default function Portfolio() {
                         plugins={[lgThumbnail, lgZoom]}
                       >
                         <a
-                          className="gallery-item"
+                          className="gallery-item w-full"
                           data-src={`${item.thumbnail}`}
                         >
-                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
                         </a>
                       </LightGallery>
                       <div className='p-4'>
@@ -387,10 +388,10 @@ export default function Portfolio() {
                         plugins={[lgThumbnail, lgZoom]}
                       >
                         <a
-                          className="gallery-item"
+                          className="gallery-item w-full"
                           data-src={`${item.thumbnail}`}
                         >
-                          <img src={`${item.thumbnail}`} className="w-full h-48 object-cover rounded-t mb-2" />
+                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
                         </a>
                       </LightGallery>
                       <div className='p-4'>
@@ -433,42 +434,7 @@ export default function Portfolio() {
         </section>
 
         {/* Contact */}
-        <section id='contact' className="px-6 py-16 text-center bg-[url('./images/bg1.jpg')] bg-cover bg-fixed">
-          <h2 className="text-2xl font-semibold mb-4 font-durer">Get In Touch</h2>
-          <p className="mb-4 text-gray-600">Feel free to reach out if you'd like to collaborate or just say hi!</p>
-          <div className="flex justify-center gap-4 text-gray-600">
-            <FadeInOnView duration={2}>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="mailto:phanlop.auto@gmail.com"
-                className='hover:text-white transition'
-              >
-                <Mail />
-              </a>
-            </FadeInOnView>
-            <FadeInOnView duration={2.5}>
-              <a
-                target="lank"
-                rel="noopener noreferrer"
-                href="https://github.com/Automatic28m"
-                className='hover:text-white transition'
-              >
-                <Github />
-              </a>
-            </FadeInOnView>
-            <FadeInOnView duration={3}>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://www.instagram.com/automatic.pb/"
-                className='hover:text-white transition'
-              >
-                <Instagram />
-              </a>
-            </FadeInOnView>
-          </div>
-        </section>
+        <Footer></Footer>
       </main>
     </div >
   );

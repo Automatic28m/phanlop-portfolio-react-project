@@ -11,6 +11,9 @@ import lgZoom from 'lightgallery/plugins/zoom';
 import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
 import FadeInOnView from '../components/animations/fadeInOnView.jsx';
+import Footer from '../components/footer.jsx';
+import LoadingCardComponent from '../components/loadingCardComponent.jsx';
+import LoadingPortfolioComponent from '../components/loadingPortfolioComponent.jsx';
 
 export default function Portfolio() {
 
@@ -38,10 +41,18 @@ export default function Portfolio() {
 
     }, [data]);
 
-    if (!data) return <div className='p-6'>Loading...</div>;
+    if (data === null) {
+        return (
+            <div className='flex flex-col min-h-screen'>
+                <Navbar />
+                <LoadingPortfolioComponent />
+                <Footer />
+            </div>
+        )
+    }
 
     return (
-        <div>
+        <div className='flex flex-col min-h-screen'>
             <Helmet>
                 <title>Phanlop's Portfolio</title>
             </Helmet>
@@ -90,6 +101,7 @@ export default function Portfolio() {
                     </div>
                 )}
             </div>
+            <Footer></Footer>
         </div>
     )
 }
