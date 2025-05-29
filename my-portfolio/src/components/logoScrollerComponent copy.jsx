@@ -21,13 +21,22 @@ const LogoScrollerComponent = () => {
         }
     }, []);
 
+    const folder = "./LogoImages/";
+
     const languages = [
-        { name: "React", url: "https://react.dev/" },
-        { name: "Python", url: "python.org" },
-        { name: "Angular", url: "https://angular.dev/" },
-        { name: "Flutter", url: "https://flutter.dev/" },
-        { name: "Express", url: "https://expressjs.com/" },
-        { name: "Node.js", url: "nodejs.org" },
+        { url: "React.png" },
+        { url: "python.png" },
+        { url: "angular.png" },
+        { url: "flutter-icon.png" },
+        { url: "express.png" },
+        { url: "node-js.png" },
+        { url: "C_Logo.png" },
+        { url: "html.png" },
+        { url: "css.png" },
+        { url: "javascript.png" },
+        { url: "php.png" },
+        { url: "mysql.png" },
+        { url: "figma.png" },
     ];
 
     return (
@@ -37,10 +46,10 @@ const LogoScrollerComponent = () => {
                     {languages.map((lang, index) => (
                         <img
                             key={index}
-                            src={`https://api.enrich.so/v1/api/search-logo?url=${lang.url}`}
+                            src={`${folder}${lang.url}`}
                             alt={lang.name}
-                            crossOrigin="anonymous"
-                            className="rounded w-24 h-24 object-contain bg-transparent p-2 mix-blend-multiply"
+                            // crossOrigin="anonymous"
+                            className="rounded w-24 h-24 object-contain bg-transparent p-2 mix-blend-multiply grayscale hover:grayscale-0 transition duration-300"
                         />
                     ))}
                 </div>

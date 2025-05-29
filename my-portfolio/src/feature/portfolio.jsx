@@ -41,6 +41,10 @@ export default function Portfolio() {
 
     }, [data]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     if (data === null) {
         return (
             <div className='flex flex-col min-h-screen'>

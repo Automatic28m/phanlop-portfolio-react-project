@@ -86,7 +86,7 @@ export default function CreatePortfolio() {
                 <title>Create new portfolio</title>
             </Helmet>
             <BackendNavbar />
-            <div className="flex items-center justify-center h-screen bg-gray-100">
+            <div className="flex items-center justify-center min-h-screen bg-gray-100 pt-24 py-16">
                 <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" enctype="multipart/form-data">
                     <h2 className="text-2xl font-bold mb-6 text-center">Create Portfolio</h2>
 

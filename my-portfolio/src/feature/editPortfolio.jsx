@@ -22,6 +22,7 @@ export default function EditPortfolio() {
     const [thumbnail, setThumbnail] = useState(null);  // To store selected image
     const [currentThumbnail, setCurrentThumbnail] = useState('');  // To display current image
     const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
 
 
     useEffect(() => {
@@ -35,11 +36,12 @@ export default function EditPortfolio() {
 
     // Fetch portfolio data
     useEffect(() => {
+        setLoading(true);  // start loading
         axios.get(`${api.getPortfolioById}/${id}`)
             .then(res => {
-                console.log("Portfolio id :",res.data[0].id);
+                console.log("Portfolio id :", res.data[0].id);
                 console.log("Fetched portfolio:", res.data);
-                
+
                 const data = res.data[0];
 
                 setTitle(data.title);
@@ -49,7 +51,11 @@ export default function EditPortfolio() {
                 setCurrentThumbnail(data.thumbnail);  // Store the current image path
                 setPortfolioTypeId(data.portfolio_type_id);
             })
-            .catch(err => console.error("Error fetching data:", err));
+            .catch(err => console.error("Error fetching data:", err))
+            .finally(() => {
+                setLoading(false);  // stop loading
+            }
+            );
     }, [id]);
 
     const handleImageChange = (e) => {
@@ -58,7 +64,7 @@ export default function EditPortfolio() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);  // start loading
+        setSaving(true);  // start loading
 
         const formData = new FormData();
         formData.append('title', title);
@@ -86,7 +92,7 @@ export default function EditPortfolio() {
         } catch (err) {
             console.error("Error updating portfolio:", err);
         } finally {
-            setLoading(false);  // stop loading
+            setSaving(false);  // stop loading
         }
     };
 
@@ -97,100 +103,110 @@ export default function EditPortfolio() {
                 <title>Edit Portfolio</title>
             </Helmet>
             <BackendNavbar></BackendNavbar>
-            <div className="flex items-center justify-center h-screen bg-gray-100">
-                <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" enctype="multipart/form-data">
-                    <h2 className="text-2xl font-bold mb-6 text-center">Edit portfolio</h2>
-
-                    <div className="mb-4">
-                        <label className="block mb-1 font-semibold">Title</label>
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className="w-full p-2 border rounded"
-                            required
-                        />
+            {loading ? (
+                <>
+                    <div className="flex flex-cols items-center justify-center min-h-screen bg-gray-100 pt-24 py-16">
+                        <p>Loading...</p>
                     </div>
+                </>
+            ) : (
+                <>
+                    <div className="flex items-center justify-center min-h-screen bg-gray-100 pt-24 py-16">
+                        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md" enctype="multipart/form-data">
+                            <h2 className="text-2xl font-bold mb-6 text-center">Edit portfolio</h2>
 
-                    <div className="mb-6">
-                        <label className="block mb-1 font-semibold">Contents</label>
-                        <textarea
-                            value={contents}
-                            onChange={(e) => setContents(e.target.value)}
-                            className="w-full p-2 border rounded"
-                        // required
-                        />
-                    </div>
-
-
-                    <div className="mb-6">
-                        <label className="block mb-1 font-semibold">Event Location</label>
-                        <input
-                            type="text"
-                            value={event_location}
-                            onChange={(e) => setEventLocation(e.target.value)}
-                            className="w-full p-2 border rounded"
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-6">
-                        <label className="block mb-1 font-semibold">Event Date</label>
-                        <DatePicker
-                            selected={event_date}
-                            onChange={(date) => setEventDate(date)}
-                            dateFormat="yyyy-MM-dd"
-                            className="border p-2 rounded w-full"
-                            placeholderText="YYYY-MM-DD"
-                        />
-                    </div>
-
-                    <div className="mb-6">
-                        <label className="block mb-1 font-semibold">Upload New Thumbnail (Optional)</label>
-                        <input
-                            className="w-full p-2 border rounded"
-                            type="file"
-                            onChange={handleImageChange}
-                            accept="image/*"
-                        />
-                        {currentThumbnail && (
-                            <div className="mt-4">
-                                <img
-                                    src={`${currentThumbnail}`}
-                                    alt="Current Thumbnail"
-                                    className="w-full max-w-xs rounded"
+                            <div className="mb-4">
+                                <label className="block mb-1 font-semibold">Title</label>
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                    required
                                 />
                             </div>
-                        )}
-                    </div>
 
-                    <div className="mb-6">
-                        <label className="block mb-1 font-semibold">Portfolio Type</label>
-                        <select
-                            value={portfolio_type_id}
-                            onChange={(e) => setPortfolioTypeId(e.target.value)}
-                            className="w-full p-2 border rounded"
-                            required
-                        >
-                            <option value="">Select a type</option>
-                            {portfolioType.map((item, index) => (
-                                <option key={index} value={item.id}>{item.title}</option>
-                            ))}
-                        </select>
-                    </div>
+                            <div className="mb-6">
+                                <label className="block mb-1 font-semibold">Contents</label>
+                                <textarea
+                                    value={contents}
+                                    onChange={(e) => setContents(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                // required
+                                />
+                            </div>
 
-                    {loading ? (
-                        <ProcessingButtonComponent />
-                    ) : (
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-                        >
-                            Save
-                        </button>
-                    )}
-                </form>
-            </div>
+
+                            <div className="mb-6">
+                                <label className="block mb-1 font-semibold">Event Location</label>
+                                <input
+                                    type="text"
+                                    value={event_location}
+                                    onChange={(e) => setEventLocation(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                />
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block mb-1 font-semibold">Event Date</label>
+                                <DatePicker
+                                    selected={event_date}
+                                    onChange={(date) => setEventDate(date)}
+                                    dateFormat="yyyy-MM-dd"
+                                    className="border p-2 rounded w-full"
+                                    placeholderText="YYYY-MM-DD"
+                                />
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block mb-1 font-semibold">Upload New Thumbnail (Optional)</label>
+                                <input
+                                    className="w-full p-2 border rounded"
+                                    type="file"
+                                    onChange={handleImageChange}
+                                    accept="image/*"
+                                />
+                                <label className="mt-4 block mb-1 font-semibold">Current image</label>
+                                {currentThumbnail && (
+                                    <div className="">
+                                        <img
+                                            src={`${currentThumbnail}`}
+                                            alt="Current Thumbnail"
+                                            className="w-full max-w-xs rounded"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block mb-1 font-semibold">Portfolio Type</label>
+                                <select
+                                    value={portfolio_type_id}
+                                    onChange={(e) => setPortfolioTypeId(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                    required
+                                >
+                                    <option value="">Select a type</option>
+                                    {portfolioType.map((item, index) => (
+                                        <option key={index} value={item.id}>{item.title}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {saving ? (
+                                <ProcessingButtonComponent />
+                            ) : (
+                                <button
+                                    type="submit"
+                                    className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                                >
+                                    Save
+                                </button>
+                            )}
+                        </form>
+                    </div>
+                </>
+            )}
         </div>
     );
 };

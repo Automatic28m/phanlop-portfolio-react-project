@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Mail, Github, Instagram } from 'lucide-react';
+import { Mail, Github, Instagram, } from 'lucide-react';
 import Navbar from '../components/navbar';
-import LightGallery from 'lightgallery/react';
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-thumbnail.css';
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import lgZoom from 'lightgallery/plugins/zoom';
 import LoadingCard from "../components/loadingCardComponent.jsx";
 import LoadingSkillComponent from '../components/loadingSkillComponent.jsx';
 import api from '../api/api.jsx';
 import { Helmet } from 'react-helmet';
 import FadeInOnView from "../components/animations/fadeInOnView.jsx";
-import WavyText from '../components/animations/wavyText.jsx';
 import { Typewriter } from '../components/animations/typeWriter.jsx';
 import TextScrollerComponent from '../components/textScrollerComponent.jsx';
 import LogoScrollerComponent from '../components/logoScrollerComponent copy.jsx';
 import Footer from '../components/footer.jsx';
+import PortfolioCard from '../components/portfolioCard.jsx';
 
 export default function Portfolio() {
 
@@ -114,19 +111,21 @@ export default function Portfolio() {
       <main className="pt-16 min-h-screen bg-gray-50/50 text-gray-800 font-sans">
 
         {/* Hero Section */}
-        <section id='hero' className="flex flex-col-reverse sm:flex-row bg-cover bg-fixed bg-[url('./images/bg2.jpg')] object-cover text-gray">
+        <section id='hero' className="flex flex-col-reverse sm:flex-row bg-cover bg-fixed bg-[url('./images/bg2.jpg')] object-cover text-gray overflow-hidden">
+          {/* Image */}
           <FadeInOnView duration={0.5}>
             <div className="">
               <img
-                src="/images/profile.png"
+                src="/images/profile2.png"
                 alt="Profile"
-                className="size-[500px] md:size-[800px] h-full object-cover"
+                className="w-[700px] md:w-[700px] h-full object-cover ease-in-out transition duration-500 ease-in-out hover:scale-105"
               />
             </div>
           </FadeInOnView>
+          {/* Content */}
           <div className="flex flex-col gap-y-5 pt-16 sm:p-0 justify-center align-center text-left px-6">
             <FadeInOnView
-              className='bg-gradient-to-r from-blue-800 to-sky-300 bg-clip-text text-transparent'
+              className='bg-gradient-to-r from-blue-800 to-sky-500 bg-clip-text text-transparent'
               duration={1}>
               <Typewriter
                 text="Hi, I'm Phanlop Boonluea"
@@ -177,7 +176,6 @@ export default function Portfolio() {
 
         <TextScrollerComponent className='bg-gray-100'></TextScrollerComponent>
 
-
         {/* About Me */}
         <section id='about' className='grid grid-cols-1 sm:grid-cols-2 gap-6 px-6 max-w-3xl mx-auto'>
           <section className="flex flex-col justify-center pt-16 sm:pt-0">
@@ -190,7 +188,7 @@ export default function Portfolio() {
           </section>
 
           <FadeInOnView>
-            <section id="quote" className="px-6 pt-8 max-w-3xl mx-auto flex justify-center z-0">
+            <section id="quote" className="px-6 pt-8 max-w-3xl mx-auto flex justify-center z-0 ">
               <div className="max-w-md flex justify-center items-center w-full h-96 overflow-hidden relative">
                 <img
                   src="/realistic-front-view-smartphone-mockup-mobile-iphone-purple-frame-with-blank-white-display-vector.png"
@@ -212,7 +210,7 @@ export default function Portfolio() {
             <LoadingSkillComponent></LoadingSkillComponent>
           ) : (
             <div className='max-w-3xl mx-auto'>
-              <h2 className="text-3xl font-semibold mb-8 font-durer text-center">Skills</h2>
+              <h2 className="text-3xl font-semibold mb-8 font-durer text-center">Tech Stacks</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-xl mx-auto">
                 {skill.length > 0 && skill.map((item, index) => (
                   <span key={index} className="bg-white p-4 rounded shadow hover:text-blue-500 duration-700 transition">{item.title}</span>
@@ -270,26 +268,7 @@ export default function Portfolio() {
               </FadeInOnView>
               <div className="grid gap-6 md:grid-cols-2">
                 {project.length > 0 && project.map((item, index) => (
-                  <FadeInOnView className="bg-white rounded shadow" key={index}>
-                    <a href={`portfolio/${item.id}`} >
-                      <LightGallery
-                        speed={500}
-                        plugins={[lgThumbnail, lgZoom]}
-                      >
-                        <a
-                          className="gallery-item w-full"
-                          data-src={`${item.thumbnail}`}
-                        >
-                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
-                        </a>
-                      </LightGallery>
-                      <div className='p-4'>
-                        <h3 className="font-bold text-lg">{item.title}</h3>
-                        <p className="text-sm">{item.contents}</p>
-                        <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
-                      </div>
-                    </a>
-                  </FadeInOnView>
+                  <PortfolioCard item={item} index={index} key={index} />
                 ))}
               </div>
             </>
@@ -307,26 +286,7 @@ export default function Portfolio() {
               </FadeInOnView>
               <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {acheivement.length > 0 && acheivement.map((item, index) => (
-                  <FadeInOnView className='bg-white rounded-lg shadow' key={index}>
-                    <a href={`portfolio/${item.id}`} >
-                      <LightGallery
-                        speed={500}
-                        plugins={[lgThumbnail, lgZoom]}
-                      >
-                        <a
-                          className="gallery-item w-full"
-                          data-src={`${item.thumbnail}`}
-                        >
-                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
-                        </a>
-                      </LightGallery>
-                      <div className='p-4'>
-                        <h3 className="font-bold text-lg">{item.title}</h3>
-                        <p className="text-sm">{item.contents}</p>
-                        <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
-                      </div>
-                    </a>
-                  </FadeInOnView>
+                  <PortfolioCard item={item} index={index} key={index} />
                 ))}
               </div>
             </>
@@ -344,26 +304,7 @@ export default function Portfolio() {
               </FadeInOnView>
               <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {internship.length > 0 && internship.map((item, index) => (
-                  <FadeInOnView className="bg-white rounded-lg shadow" key={index}>
-                    <a href={`portfolio/${item.id}`} >
-                      <LightGallery
-                        speed={500}
-                        plugins={[lgThumbnail, lgZoom]}
-                      >
-                        <a
-                          className="gallery-item w-full"
-                          data-src={`${item.thumbnail}`}
-                        >
-                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
-                        </a>
-                      </LightGallery>
-                      <div className='p-4'>
-                        <h3 className="font-bold">{item.title}</h3>
-                        <p className="mt-1 text-sm">{item.contents}</p>
-                        <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
-                      </div>
-                    </a>
-                  </FadeInOnView>
+                  <PortfolioCard item={item} index={index} key={index} />
                 ))}
               </div>
             </>
@@ -381,26 +322,7 @@ export default function Portfolio() {
               </FadeInOnView>
               <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
                 {activity.length > 0 && activity.map((item, index) => (
-                  <FadeInOnView className="bg-white rounded-lg shadow" key={index}>
-                    <a href={`portfolio/${item.id}`} >
-                      <LightGallery
-                        speed={500}
-                        plugins={[lgThumbnail, lgZoom]}
-                      >
-                        <a
-                          className="gallery-item w-full"
-                          data-src={`${item.thumbnail}`}
-                        >
-                          <img src={`${item.thumbnail}`} className="object-cover rounded-t aspect-[16/9] transition-transform duration-300 ease-in-out transform hover:scale-110 hover:rounded" />
-                        </a>
-                      </LightGallery>
-                      <div className='p-4'>
-                        <h3 className="font-bold">{item.title}</h3>
-                        <p className="text-sm">{item.contents}</p>
-                        <p className="text-sm text-gray-600">At {item.event_location}, {item.event_date}</p>
-                      </div>
-                    </a>
-                  </FadeInOnView>
+                  <PortfolioCard item={item} index={index} key={index} />
                 ))}
               </div>
             </>

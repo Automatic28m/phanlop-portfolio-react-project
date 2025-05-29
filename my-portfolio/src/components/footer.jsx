@@ -3,7 +3,7 @@ import { Mail, Github, Instagram } from 'lucide-react';
 
 export default function Footer() {
     return (
-        <section id='contact' className="px-6 py-16 text-center bg-[url('./images/bg1.jpg')] bg-cover bg-fixed bottom-0 left-0 right-0 mt-auto">
+        <section id='contact' className="px-6 py-16 text-center bg-[url('./images/bg2.jpg')] bg-cover bg-fixed bottom-0 left-0 right-0 mt-auto">
             <h2 className="text-2xl font-semibold mb-4 font-durer">Get In Touch</h2>
             <p className="mb-4 text-gray-600">Feel free to reach out if you'd like to collaborate or just say hi!</p>
             <div className="flex justify-center gap-4 text-gray-600">
