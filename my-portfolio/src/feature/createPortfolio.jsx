@@ -19,11 +19,22 @@ export default function CreatePortfolio() {
     const [portfolio_type_id, setPortfolioTypeId] = useState('');
     const [portfolioType, setPortfolioType] = useState([]);
     const [files, setFiles] = useState([]);
-    const [showGalleryUpload, setShowGalleryUpload] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [selectedSkillTypes, setSelectedSkillTypes] = useState([]);
+    const [skillTypes, setSkillTypes] = useState([]);
 
+    const fetchSkillTypes = () => {
+        axios.get(api.getSkillTypes)
+            .then(res => {
+                console.log("Fetched skill types:", res.data);
+                setSkillTypes(res.data);
+            })
+            .catch(err => console.error("Error fetching skill types:", err));
+    };
 
     useEffect(() => {
+        fetchSkillTypes();
+
         axios.get(api.getPortfolioType)
             .then((res) => {
                 setPortfolioType(res.data);
@@ -70,6 +81,15 @@ export default function CreatePortfolio() {
                     "Content-Type": "multipart/form-data",
                 },
             });
+
+            const id = res.data.portfolioId;
+
+            if (id || selectedSkillTypes.length > 0) {
+                await axios.post(`${api.addSkillTypeToPortfolio}`, {
+                    portfolio_id: id,
+                    skill_type_ids: selectedSkillTypes,
+                });
+            }
 
             console.log("Portfolio created successfully:", res.data);
             navigate('/displayPortfolio');
@@ -160,6 +180,36 @@ export default function CreatePortfolio() {
                                 <option key={index} value={item.id}>{item.title}</option>
                             ))}
                         </select>
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="block mb-1 font-semibold">Skill Types (Optional)</label>
+                        {skillTypes.length > 0 ? (
+                            <div className="grid grid-cols-2 gap-2">
+                                {skillTypes.map((skillType) => (
+                                    <label
+                                        key={skillType.id}
+                                        className="flex items-center gap-2 cursor-pointer px-2 py-1 rounded"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            value={skillType.id}
+                                            checked={selectedSkillTypes.includes(skillType.id)}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setSelectedSkillTypes([...selectedSkillTypes, skillType.id]);
+                                                } else {
+                                                    setSelectedSkillTypes(selectedSkillTypes.filter(id => id !== skillType.id));
+                                                }
+                                            }}
+                                            className="accent-current"
+                                        />
+                                        <div className={`px-2 py-1 rounded bg-${skillType.color}-100 mr-2`}><span className={`text-${skillType.color}-900`}>{skillType.name}</span></div>
+
+                                    </label>
+                                ))}
+                            </div>
+                        ) : null}
                     </div>
 
                     {loading ? (

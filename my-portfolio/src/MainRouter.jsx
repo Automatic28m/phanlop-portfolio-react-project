@@ -9,6 +9,8 @@ import DisplayPortfolio from './feature/displayPortfolio';
 import EditPortfolio from './feature/editPortfolio';
 import ProtectedRoute from './protectedRoute';
 import EditGallery from './feature/editGallery';
+import ManageSkillType from './feature/manageSkillType';
+import EditSkillType from './feature/editSkillType';
 
 const MainRouter = () => {
     return (
@@ -23,6 +25,8 @@ const MainRouter = () => {
                 <Route path='/displayPortfolio' element={<ProtectedRoute><DisplayPortfolio /></ProtectedRoute>} />
                 <Route path='/editPortfolio/:id' element={<ProtectedRoute><EditPortfolio /></ProtectedRoute>} />
                 <Route path='/editGallery/:id' element={<ProtectedRoute><EditGallery /></ProtectedRoute>} />
+                <Route path='/manageSkillTypes' element={<ProtectedRoute><ManageSkillType /></ProtectedRoute>} />
+                <Route path='/editSkillType/:id' element={<ProtectedRoute><EditSkillType /></ProtectedRoute>} />
             </Routes>
         </Router>
     )

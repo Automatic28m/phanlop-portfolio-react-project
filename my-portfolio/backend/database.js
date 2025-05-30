@@ -16,15 +16,15 @@ const pool = mysql.createPool({
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
     port: process.env.MYSQL_PORT,
-    ssl: {
-        ca: fs.readFileSync(path.join(__dirname, 'certs', 'ca.pem')),
-    },
-    waitForConnections: true,
-    connectionLimit: 10,
+    // ssl: {
+    //     ca: fs.readFileSync(path.join(__dirname, 'certs', 'ca.pem')),
+    // },
+    // waitForConnections: true,
+    // connectionLimit: 10,
 }).promise()
 
 console.log('Connecting to DB:', {
-  host: process.env.MYSQL_HOST,
+    host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
@@ -90,19 +90,33 @@ export async function getPortfolioType() {
 
 export async function updatePortfolioById(title, contents, event_location, event_date, thumbnail, portfolio_type_id, id) {
 
+    if (thumbnail && thumbnail !== 'null') {
+        const [rows] = await pool.query(`
+            UPDATE portfolio
+            SET 
+            title = ?, 
+            contents = ?, 
+            event_location = ?, 
+            event_date = ?, 
+            thumbnail = ?, 
+            portfolio_type_id = ?
+            WHERE id = ?
+        `, [title, contents, event_location, event_date, thumbnail, portfolio_type_id, id])
+        return rows;
+    }
+
+    // If thumbnail is null or 'null', we don't update it
     const [rows] = await pool.query(`
         UPDATE portfolio
-        SET
-        title = ?,
-        contents = ?,
-        event_location = ?,
-        event_date = ?,
-        thumbnail = ?,
+        SET 
+        title = ?, 
+        contents = ?, 
+        event_location = ?, 
+        event_date = ?, 
         portfolio_type_id = ?
         WHERE id = ?
-        `,
-        [title, contents, event_location, event_date, thumbnail, portfolio_type_id, id]
-    )
+    `, [title, contents, event_location, event_date, portfolio_type_id, id]);
+
     return rows
 }
 
@@ -164,6 +178,92 @@ export async function deleteGalleryById(id) {
     return rows
 }
 
+export async function addSkillType(name, color) {
+    const [result] = await pool.query(`
+            INSERT INTO skill_type (name, color)
+            VALUES (?, ?)
+        `, [name, color]);
+
+    const id = result.insertId;
+}
+
+export async function getSkillTypes() {
+    const [rows] = await pool.query(`
+            SELECT * 
+            FROM skill_type
+        `);
+    return rows;
+}
+
+export async function getSkillTypeById(id) {
+    const [rows] = await pool.query(`
+        SELECT * 
+        FROM skill_type
+        WHERE id = ?
+    `, [id]);
+
+    if (rows.length === 0) {
+        throw new Error(`Skill type with id ${id} not found.`);
+    }
+
+    return rows[0];
+}
+
+export async function updateSkillTypeById(id, name, color) {
+    const [result] = await pool.query(`
+        UPDATE skill_type
+        SET name = ?, color = ?
+        WHERE id = ?
+    `, [name, color, id]);
+
+    if (result.affectedRows === 0) {
+        throw new Error(`Skill type with id ${id} not found.`);
+    }
+
+    return getSkillTypeById(id);
+}
+
+export async function deleteSkillTypeById(id) {
+    const [result] = await pool.query(`
+        DELETE FROM skill_type
+        WHERE id = ?
+    `, [id]);
+
+    if (result.affectedRows === 0) {
+        throw new Error(`Skill type with id ${id} not found.`);
+    }
+
+    return result;
+}
+
+export async function addSkillTypeToPortfolio(portfolio_id, skill_type_id) {
+    const [result] = await pool.query(`
+        INSERT INTO portfolio_skill_types (portfolio_id, skill_type_id)
+        VALUES (?, ?)
+    `, [portfolio_id, skill_type_id]);
+
+    return result;
+}
+
+export async function getSkillTypesByPortfolioId(id) {
+    const [rows] = await pool.query(`
+        SELECT st.*
+        FROM portfolio_skill_types pst
+        JOIN skill_type st ON pst.skill_type_id = st.id
+        WHERE pst.portfolio_id = ?
+    `, [id]);
+
+    return rows;
+}
+
+export async function deleteAllSkillTypesByPortfolioId(portfolio_id) {
+    const [result] = await pool.query(`
+        DELETE FROM portfolio_skill_types
+        WHERE portfolio_id = ?
+    `, [portfolio_id]);
+
+    return result;
+}
 
 // ABOUT USER
 

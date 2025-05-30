@@ -32,6 +32,7 @@ export default function BackendNavbar() {
                         <a href="/" className="hover:text-blue-600">Home</a>
                         <a href="/displayPortfolio" className="hover:text-blue-600">Display</a>
                         <a href="/createPortfolio" className="hover:text-blue-600">Create New</a>
+                        <a href="/manageSkillTypes" className="hover:text-blue-600">Skill Types</a>
                         <a href="/logout" className="hover:text-blue-600">Logout</a>
                     </div>
 
@@ -52,6 +53,7 @@ export default function BackendNavbar() {
                         <a href="/" className="block text-blue-600 hover:text-blue-800">Home</a>
                         <a href="/displayPortfolio" className="block text-blue-600 hover:text-blue-800">Display</a>
                         <a href="/createPortfolio" className="block text-blue-600 hover:text-blue-800">Create New</a>
+                        <a href="/manageSkillTypes" className="block text-blue-600 hover:text-blue-800">Skill Types</a>
                         <a href="/logout" className="block text-blue-600 hover:text-blue-800">Logout</a>
                     </div>
                 </div>

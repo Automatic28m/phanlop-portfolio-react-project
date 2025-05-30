@@ -1,3 +1,4 @@
+
 const BASE_URL = "https://phanlop-portfolio-react-project.onrender.com";
 // const BASE_URL = "http://localhost:8080";
 
@@ -30,6 +31,8 @@ const api = {
     getPortfolioById: `${BASE_URL}/getPortfolioById`,
     updatePortfolioById: `${BASE_URL}/updatePortfolioById`,
     uploadMultipleGalleryImagesToPortfolioId: `${BASE_URL}/uploadMultipleGalleryImagesToPortfolioId`,
+    addSkillTypeToPortfolio: `${BASE_URL}/addSkillTypeToPortfolio`,
+    getSkillTypeByPortfolioId: `${BASE_URL}/getSkillTypeByPortfolioId`,
 
     // editGallery.jsx
     deleteGalleryById: `${BASE_URL}/deleteGalleryById`,
@@ -38,7 +41,14 @@ const api = {
     getGalleryByPortfolioId: `${BASE_URL}/getGalleryByPortfolioId`,
     
     // uploadGalleryComponent.jsx
-    uploadGallery: `${BASE_URL}/upload-gallery`
+    uploadGallery: `${BASE_URL}/upload-gallery`,
+
+    // editSkillType.jsx
+    addSkillType: `${BASE_URL}/addSkillType`,
+    getSkillTypes: `${BASE_URL}/getSkillTypes`,
+    getSkillTypeById: `${BASE_URL}/getSkillTypeById`,
+    deleteSkillTypeById: `${BASE_URL}/deleteSkillTypeById`,
+    updateSkillTypeById: `${BASE_URL}/updateSkillTypeById`,
 }
 
 export default api;

@@ -1,0 +1,26 @@
+const skillTypeColors = [
+    { value: 'red', label: 'red' },
+    { value: 'orange', label: 'orange' },
+    { value: 'amber', label: 'amber' },
+    { value: 'yellow', label: 'yellow' },
+    { value: 'lime', label: 'lime' },
+    { value: 'green', label: 'green' },
+    { value: 'emerald', label: 'emerald' },
+    { value: 'teal', label: 'teal' },
+    { value: 'cyan', label: 'cyan' },
+    { value: 'sky', label: 'sky' },
+    { value: 'blue', label: 'blue' },
+    { value: 'indigo', label: 'indigo' },
+    { value: 'violet', label: 'violet' },
+    { value: 'purple', label: 'purple' },
+    { value: 'fuchsia', label: 'fuchsia' },
+    { value: 'pink', label: 'pink' },
+    { value: 'rose', label: 'rose' },
+    { value: 'slate', label: 'slate' },
+    { value: 'gray', label: 'gray' },
+    { value: 'zinc', label: 'zinc' },
+    { value: 'neutral', label: 'neutral' },
+    { value: 'stone', label: 'stone' },
+];
+
+export default skillTypeColors;

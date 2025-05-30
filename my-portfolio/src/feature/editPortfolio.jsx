@@ -23,20 +23,37 @@ export default function EditPortfolio() {
     const [currentThumbnail, setCurrentThumbnail] = useState('');  // To display current image
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [selectedSkillTypes, setSelectedSkillTypes] = useState([]);
+    const [skillTypes, setSkillTypes] = useState([]);
 
+    const fetchSkillTypes = () => {
+        axios.get(api.getSkillTypes)
+            .then(res => {
+                console.log("Fetched skill types:", res.data);
+                setSkillTypes(res.data);
+            })
+            .catch(err => console.error("Error fetching skill types:", err));
+    };
 
-    useEffect(() => {
+    const fetchPortfolio = () => {
         axios.get(api.getPortfolioType)
             .then(res => {
                 console.log("Fetched portfolio type data:", res.data);
                 setPortfolioType(res.data);
             })
             .catch(err => console.error("Error fetching education data:", err));
-    }, []);
+    }
 
-    // Fetch portfolio data
-    useEffect(() => {
-        setLoading(true);  // start loading
+    const fetchSkillTypesByPortfolioId = () => {
+        axios.get(`${api.getSkillTypeByPortfolioId}/${id}`)
+            .then(res => {
+                console.log("Fetched skill types by portfolio ID:", res.data);
+                setSelectedSkillTypes(res.data.map(skill => skill.id));
+            })
+            .catch(err => console.error("Error fetching skill types by portfolio ID:", err));
+    };          
+
+    const fetchPortfolioById = () => {
         axios.get(`${api.getPortfolioById}/${id}`)
             .then(res => {
                 console.log("Portfolio id :", res.data[0].id);
@@ -56,6 +73,22 @@ export default function EditPortfolio() {
                 setLoading(false);  // stop loading
             }
             );
+    };
+
+    useEffect(() => {
+        fetchSkillTypes();
+        fetchPortfolio();
+        fetchSkillTypesByPortfolioId();
+    }, []);
+
+    useEffect(() => {
+        console.log("Selected skill types:", selectedSkillTypes);
+    }, [selectedSkillTypes]);
+
+    // Fetch portfolio data
+    useEffect(() => {
+        setLoading(true);  // start loading
+        fetchPortfolioById();
     }, [id]);
 
     const handleImageChange = (e) => {
@@ -87,6 +120,14 @@ export default function EditPortfolio() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+
+            // If skill types are selected, send them to the backend
+            if (selectedSkillTypes.length > 0) {
+                await axios.post(`${api.addSkillTypeToPortfolio}`, {
+                    portfolio_id: id,
+                    skill_type_ids: selectedSkillTypes,
+                });
+            }
 
             navigate('/displayPortfolio');
         } catch (err) {
@@ -191,6 +232,36 @@ export default function EditPortfolio() {
                                         <option key={index} value={item.id}>{item.title}</option>
                                     ))}
                                 </select>
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block mb-1 font-semibold">Skill Types (Optional)</label>
+                                {skillTypes.length > 0 ? (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {skillTypes.map((skillType) => (
+                                            <label
+                                                key={skillType.id}
+                                                className="flex items-center gap-2 cursor-pointer px-2 py-1 rounded"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    value={skillType.id}
+                                                    checked={selectedSkillTypes.includes(skillType.id)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedSkillTypes([...selectedSkillTypes, skillType.id]);
+                                                        } else {
+                                                            setSelectedSkillTypes(selectedSkillTypes.filter(id => id !== skillType.id));
+                                                        }
+                                                    }}
+                                                    className="accent-current"
+                                                />
+                                                <div className={`px-2 py-1 rounded bg-${skillType.color}-100 mr-2`}><span className={`text-${skillType.color}-900`}>{skillType.name}</span></div>
+
+                                            </label>
+                                        ))}
+                                    </div>
+                                ) : null}
                             </div>
 
                             {saving ? (

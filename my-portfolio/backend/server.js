@@ -6,7 +6,37 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url'; // Import the `fileURLToPath` function
-import { getPortfolio, getPortfolioById, getEducations, createPortfolio, getPortfolioByTypeId, adminLogin, getPortfolioType, updatePortfolioById, deletePortfolioById, getSkills, getProjects, getAcheivements, getInternships, getActivities, uploadImageGalleryToPortfolioId, getGalleryByPortfolioId, getAdminFromUsername, adminRegister, deleteGalleryById, getGalleryById, countGalleryByPortfolioId } from './database.js'
+import {
+    getPortfolio,
+    getPortfolioById,
+    getEducations,
+    createPortfolio,
+    getPortfolioByTypeId,
+    adminLogin,
+    getPortfolioType,
+    updatePortfolioById,
+    deletePortfolioById,
+    getSkills,
+    getProjects,
+    getAcheivements,
+    getInternships,
+    getActivities,
+    uploadImageGalleryToPortfolioId,
+    getGalleryByPortfolioId,
+    getAdminFromUsername,
+    adminRegister,
+    deleteGalleryById,
+    getGalleryById,
+    countGalleryByPortfolioId,
+    addSkillType,
+    getSkillTypes,
+    deleteSkillTypeById,
+    getSkillTypeById,
+    updateSkillTypeById,
+    addSkillTypeToPortfolio,
+    getSkillTypesByPortfolioId,
+    deleteAllSkillTypesByPortfolioId
+} from './database.js';
 import verifyToken from './middleware/auth.js';
 import { v2 as cloudinary } from 'cloudinary';
 import streamifier from 'streamifier';
@@ -351,18 +381,109 @@ app.delete("/deletePortfolioById/:id", async (req, res) => {
     }
 });
 
-// app.post('/upload-gallery/:portfolioId', upload.array('images', 10), async (req, res) => {
-//     const { portfolioId } = req.params;
-//     const imageFilenames = req.files.map(file => file.filename); // multer adds this
+app.post("/addSkillType", async (req, res) => {
+    const { name, color } = req.body;
+    if (!name || !color) {
+        return res.status(400).json({ message: "Name and color are required" });
+    }
 
-//     try {
-//         const result = await uploadImageGalleryToPortfolioId(portfolioId, imageFilenames);
-//         res.json({ success: true, inserted: result.affectedRows });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ success: false, error: err.message });
-//     }
-// });
+    try {
+        await addSkillType(name, color);
+        res.status(200).send(`Skill type ${name}` + " added successfully");
+    } catch (error) {
+        console.error("Error adding skill type:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+})
+
+app.get("/getSkillTypes", async (req, res) => {
+    try {
+        const skillTypes = await getSkillTypes();
+        res.status(200).json(skillTypes);
+    } catch (error) {
+        console.error("Error fetching skill types:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+app.get("/getSkillTypeById/:id", async (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+        return res.status(400).send({ message: "Skill type ID is required" });
+    }
+
+    try {
+        const skillType = await getSkillTypeById(id);
+        res.send(skillType);
+    } catch (error) {
+        console.error("Error fetching skill type:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
+
+app.put("/updateSkillTypeById/:id", async (req, res) => {
+    const id = req.params.id;
+    const { name, color } = req.body;
+    if (!id || !name || !color) {
+        return res.status(400).send({ message: "Skill type ID, name, and color are required" });
+    }
+    try {
+        await updateSkillTypeById(id, name, color);
+        res.status(200).send(`Skill type with ID ${id} updated successfully`);
+    } catch (error) {
+        console.error("Error updating skill type:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
+
+app.delete("/deleteSkillTypeById/:id", async (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+        return res.status(400).json({ message: "Skill type ID is required" });
+    }
+
+    try {
+        const result = await deleteSkillTypeById(id);
+        res.status(200).send(`Skill type with ID ${id} deleted successfully`);
+    } catch (error) {
+        console.error("Error deleting skill type:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
+
+app.get ("/getSkillTypeByPortfolioId/:id", async (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+        return res.status(400).send({ message: "Portfolio ID is required" });
+    }
+
+    try {
+        const skillTypes = await getSkillTypesByPortfolioId(id);
+        res.send(skillTypes);
+    } catch (error) {
+        console.error("Error fetching skill types by portfolio ID:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
+
+app.post("/addSkillTypeToPortfolio", async (req, res) => {
+    const { portfolio_id, skill_type_ids } = req.body;
+    if (!portfolio_id || !skill_type_ids || !Array.isArray(skill_type_ids)) {
+        return res.status(400).json({ message: "portfolio_id and skill_type_ids (array) are required" });
+    }
+
+    try {
+        // Loop through each skill_type_id and add to portfolio
+        await deleteAllSkillTypesByPortfolioId(portfolio_id); // Delete all existing skill types for the portfolio
+        for (const skill_type_id of skill_type_ids) {
+            await addSkillTypeToPortfolio(portfolio_id, skill_type_id);
+        }
+        res.status(200).send(`Skill types [${skill_type_ids.join(', ')}] added to portfolio with ID ${portfolio_id} successfully`);
+    } catch (error) {
+        console.error("Error adding skill types to portfolio:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
 
 app.post("/register", async (req, res) => {
     try {
