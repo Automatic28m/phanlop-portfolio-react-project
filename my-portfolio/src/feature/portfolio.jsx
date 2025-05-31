@@ -20,8 +20,20 @@ export default function Portfolio() {
     const [data, setData] = useState(null);
     const { id } = useParams();
     const [gallery, setGallery] = useState([]);
+    const [skillTypes, setSkillTypes] = useState([]);
+
+    const fetchSkillTypesByPortfolioId = async (portfolioId) => {
+        axios.get(`${api.getSkillTypeByPortfolioId}/${portfolioId}`)
+            .then(res => {
+                setSkillTypes(res.data);
+            })
+            .catch(err => {
+                console.error("Error fetching skill types:", err);
+            })
+    }
 
     useEffect(() => {
+        fetchSkillTypesByPortfolioId(id)
         axios.get(`${api.getPortfolioById}/${id}`)
             .then(res =>
                 setData(res.data[0]),
@@ -67,7 +79,16 @@ export default function Portfolio() {
                     <h1 className="text-3xl font-bold mb-2">{data.title}</h1>
                     <p className="text-gray-700 whitespace-pre-line mb-2">{data.contents}</p>
                     <p className='text-sm font-bold'>At {data.event_location}, {data.event_date}</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        {skillTypes.map((skillType, idx) => (
+                            <span key={idx} className={`px-2 py-1 text-xs rounded bg-${skillType.color}-100 text-${skillType.color}-900`}>
+                                {skillType.name}
+                            </span>
+                        ))}
+                    </div>
                 </FadeInOnView>
+
+                {/* Gallery */}
                 {gallery.length === 0 ? (
                     <></>
                 ) : (

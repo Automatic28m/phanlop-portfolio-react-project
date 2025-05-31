@@ -12,6 +12,7 @@ export default function PortfolioCard({ item, index }) {
 
     const navigate = useNavigate();
     const [skillTypes, setSkillTypes] = useState([]);
+    
     const handleReadMore = () => {
         navigate(`/portfolio/${item.id}`);
     };
@@ -47,7 +48,7 @@ export default function PortfolioCard({ item, index }) {
                     </LightGallery>
                     <div id="content-container" className='p-4'>
                         <h3 className="font-bold text-lg">{item.title}</h3>
-                        <p className="text-sm">{item.contents}</p>
+                        <p className="text-sm line-clamp-3">{item.contents}</p>
                         <p className='text-sm font-bold'>At {item.event_location}, {item.event_date}</p>
                         <div className="flex flex-wrap gap-2 mt-2">
                             {skillTypes.map((skillType, idx) => (
