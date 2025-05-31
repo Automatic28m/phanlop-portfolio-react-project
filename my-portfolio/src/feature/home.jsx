@@ -263,7 +263,7 @@ export default function Portfolio() {
                 >
                   Thai-Austrian Technical College
                 </a>
-                . That decision sparked a passion in me—I found myself diving
+                . That decision sparked a passion in me. I found myself diving
                 deep into code, competing in various contests, and discovering
                 that not only did I enjoy programming, but I was also pretty
                 good at it. Each competition helped shape my confidence and
@@ -273,10 +273,10 @@ export default function Portfolio() {
                 In 2024, I took a bold step and chose to pursue Computer
                 Engineering, a field that combines both hardware and software
                 disciplines. Transitioning into this field was a
-                challenge—especially the math-heavy courses I hadn’t encountered
+                challenge, especially the math-heavy courses I hadn’t encountered
                 much before. But I was determined. I doubled down on my studies,
                 stayed focused in class, and pushed myself to adapt. That hard
-                work paid off—I finished my first year with pride and progress.
+                work paid off. I finished my first year with pride and progress.
                 <br />
                 <br />
                 Now, I’m channeling my energy into building real-world projects
