@@ -70,7 +70,6 @@ export default function EditSkillType() {
             <Helmet>
                 <title>Edit Skill type</title>
             </Helmet>
-            <BackendNavbar></BackendNavbar>
             {loading ? (
                 <>
                     <div className="flex flex-cols items-center justify-center min-h-screen bg-gray-100 pt-24 py-16">

@@ -49,6 +49,10 @@ const api = {
     getSkillTypeById: `${BASE_URL}/getSkillTypeById`,
     deleteSkillTypeById: `${BASE_URL}/deleteSkillTypeById`,
     updateSkillTypeById: `${BASE_URL}/updateSkillTypeById`,
+
+    // Images amount
+    getImageCountByFolder: `${BASE_URL}/getImageCountByFolder`,
+
 }
 
 export default api;
