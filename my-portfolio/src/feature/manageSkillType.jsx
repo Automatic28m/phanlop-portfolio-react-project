@@ -246,7 +246,6 @@ export default function ManageSkillType() {
                 <title>Edit Skill Types</title>
             </Helmet>
             <div><Toaster /></div>
-            <BackendNavbar></BackendNavbar>
             <section className='pt-16'>
                 {loadingDelete ? (
                     <></>

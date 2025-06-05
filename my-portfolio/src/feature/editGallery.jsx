@@ -228,7 +228,6 @@ export default function EditGallery() {
                 <title>Edit Gallery</title>
             </Helmet>
             <div><Toaster /></div>
-            <BackendNavbar></BackendNavbar>
             <section className='pt-16'>
                 {loadingDelete ? (
                     <></>

@@ -271,7 +271,7 @@ export default function DisplayPortfolio() {
 				<title>Dashboard</title>
 			</Helmet>
 			<div><Toaster /></div>
-			<BackendNavbar></BackendNavbar>
+			{/* <BackendNavbar></BackendNavbar> */}
 			<section className='pt-16'>
 				{loadingDelete ? (
 					<></>

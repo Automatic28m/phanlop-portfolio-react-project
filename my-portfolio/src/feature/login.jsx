@@ -19,7 +19,7 @@ export default function Login() {
           localStorage.removeItem('token'); // optional
           navigate('/login'); // redirect to login or any other route
         } else {
-          navigate('/displayPortfolio'); // still valid
+          navigate('/dashboard'); // still valid
         }
       } catch (error) {
         console.error('Invalid token:', error);
