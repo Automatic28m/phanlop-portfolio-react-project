@@ -11,6 +11,7 @@ import ProtectedRoute from './protectedRoute';
 import EditGallery from './feature/editGallery';
 import ManageSkillType from './feature/manageSkillType';
 import EditSkillType from './feature/editSkillType';
+import Dashboard from './feature/dashboard';
 
 const MainRouter = () => {
     return (
@@ -19,6 +20,7 @@ const MainRouter = () => {
                 <Route path='/' element={<Home />} />
                 <Route path='/portfolio/:id' element={<Portfolio />} />
                 <Route path='/login' element={<LoginPage />} />
+                <Route path='/dashboard' element={<Dashboard />} />
 
                 <Route path='/Logout' element={<ProtectedRoute><LogoutPage /></ProtectedRoute>} />
                 <Route path='/createPortfolio' element={<ProtectedRoute><CreatePortfolio /></ProtectedRoute>} />
